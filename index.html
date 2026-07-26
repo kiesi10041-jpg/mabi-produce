@@ -53,23 +53,23 @@
             user-select: none;
         }
 
-        .update-time {
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            margin-top: 4px;
-        }
+        .update-time { font-size: 0.8rem; color: var(--text-sub); margin-top: 4px; }
 
         .admin-badge {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             background-color: var(--danger-red);
             color: white;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 20px;
             font-weight: bold;
             display: none;
         }
 
         body.is-admin .admin-badge { display: inline-block; }
+
+        .admin-only { display: none !important; }
+        body.is-admin .admin-only { display: block !important; }
+        body.is-admin .user-only { display: none !important; }
 
         .progress-box {
             background: var(--card-bg);
@@ -136,18 +136,9 @@
             gap: 6px;
         }
 
-        .del-btn {
-            color: var(--danger-red);
-            cursor: pointer;
-            font-weight: bold;
-            margin-left: 4px;
-        }
+        .del-btn { color: var(--danger-red); cursor: pointer; font-weight: bold; margin-left: 4px; }
 
-        .del-member { display: none; }
-        body.is-admin .del-member { display: inline; }
-
-        .add-member-form { display: none; gap: 8px; margin-top: 10px; }
-        body.is-admin .add-member-form { display: flex; flex-wrap: wrap; }
+        .add-member-form { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
 
         .add-member-form input, .add-member-form select {
             padding: 6px 12px;
@@ -183,18 +174,14 @@
             transition: all 0.2s;
         }
 
-        .goal-item:hover {
-            border-color: var(--accent-blue);
-        }
+        .goal-item:hover { border-color: var(--accent-blue); }
 
         .goal-item.main-active {
             border: 1.5px solid var(--accent-green);
             background: rgba(34, 197, 94, 0.08);
         }
 
-        .goal-item.view-selected {
-            border: 1.5px solid var(--accent-blue);
-        }
+        .goal-item.view-selected { border: 1.5px solid var(--accent-blue); }
 
         .goal-maker { color: var(--accent-blue); font-weight: bold; }
         .goal-target { color: var(--gold-main); font-weight: bold; margin-left: 6px; }
@@ -239,10 +226,7 @@
             font-size: 0.75rem;
             font-weight: bold;
             cursor: pointer;
-            display: none;
         }
-
-        body.is-admin .btn-activate { display: inline-block; }
 
         .section-card {
             background-color: var(--card-bg);
@@ -266,6 +250,7 @@
         .sec-my .section-title { color: var(--accent-green); }
         .sec-summary .section-title { color: var(--accent-purple); }
         .sec-rem .section-title { color: var(--gold-main); }
+        .sec-admin-input .section-title { color: var(--danger-red); }
 
         .toggle-btn {
             background: rgba(255, 255, 255, 0.08);
@@ -366,21 +351,43 @@
         .qty-need { background-color: rgba(245, 158, 11, 0.15); color: var(--gold-main); }
         .qty-done { background-color: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
 
-        .sub-group-title {
-            font-size: 0.95rem;
-            font-weight: bold;
-            color: var(--accent-purple);
-            margin: 12px 0 6px 0;
-            padding-bottom: 4px;
-            border-bottom: 1px dashed var(--card-border);
+        .admin-table-container { overflow-x: auto; }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
         }
 
-        .floating-board-container {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            z-index: 900;
+        .admin-table th, .admin-table td {
+            padding: 10px 12px;
+            border: 1px solid var(--card-border);
+            text-align: left;
         }
+
+        .admin-table th { background: #0b0f19; color: var(--accent-blue); font-weight: bold; }
+
+        .admin-table input[type="number"] {
+            width: 80px;
+            padding: 6px;
+            background: #0b0f19;
+            border: 1px solid var(--accent-blue);
+            color: white;
+            border-radius: 4px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .admin-table input[type="text"] {
+            width: 100%;
+            padding: 6px;
+            background: #0b0f19;
+            border: 1px solid var(--card-border);
+            color: white;
+            border-radius: 4px;
+        }
+
+        .floating-board-container { position: fixed; bottom: 25px; right: 25px; z-index: 900; }
 
         .floating-board-btn {
             background: linear-gradient(135deg, var(--accent-blue), #0284c7);
@@ -402,8 +409,7 @@
 
         .unread-badge {
             position: absolute;
-            top: -6px;
-            right: -6px;
+            top: -6px; right: -6px;
             background-color: var(--danger-red);
             color: white;
             font-size: 0.75rem;
@@ -585,33 +591,8 @@
             padding: 2px 8px;
             border-radius: 4px;
             font-weight: bold;
-            display: none;
+            display: inline-block !important;
         }
-
-        body.is-admin .btn-apply-toggle { display: inline-block; }
-
-        .board-content { font-size: 0.95rem; white-space: pre-wrap; }
-
-        .edit-controls {
-            display: none;
-            gap: 10px;
-            margin-top: 4px;
-            flex-wrap: wrap;
-        }
-
-        body.is-admin .edit-controls { display: flex; }
-
-        .edit-controls input {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 6px;
-            color: white;
-            padding: 4px 8px;
-            font-size: 0.85rem;
-        }
-
-        .input-num { width: 70px; text-align: right; }
-        .input-comment { flex: 1; min-width: 150px; }
 
         .save-bar {
             position: fixed;
@@ -661,7 +642,7 @@
             <h1 id="secretTrigger">소울 리버레이트 제작 파티 현황판</h1>
             <div class="update-time" id="last-update-time">최종 업데이트: -</div>
         </div>
-        <span class="admin-badge" id="adminBadge">편집자 모드</span>
+        <span class="admin-badge" id="adminBadge">관리자 편집 모드</span>
     </header>
 
     <!-- 전체 준비 완료율 ProgressBar -->
@@ -681,7 +662,7 @@
             <span>참가 파티원 목록</span>
         </div>
         <div class="member-tags" id="member-list"></div>
-        <div class="add-member-form">
+        <div class="add-member-form admin-only">
             <input type="text" id="new-member-name" placeholder="파티원 이름 입력">
             <button class="btn-sm" onclick="addMember()">파티원 추가</button>
         </div>
@@ -693,7 +674,7 @@
             <span>파티 제작 목표 대기열</span>
         </div>
         <div class="goal-tags" id="goal-list"></div>
-        <div class="add-member-form">
+        <div class="add-member-form admin-only">
             <select id="goal-maker-select"></select>
             <select id="goal-weapon-select">
                 <option value="lance">소울 리버레이트 랜스</option>
@@ -710,8 +691,28 @@
         </div>
     </div>
 
-    <!-- [1] 최상위 제작 재료 현황 -->
-    <div class="section-card sec-my">
+    <!-- [관리자 전용] 빠른 수량 기입/편집 테이블 -->
+    <div class="section-card sec-admin-input admin-only">
+        <div class="section-title">
+            <span>관리자 빠른 재료 수량 입력 대시보드</span>
+        </div>
+        <div class="admin-table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>재료명</th>
+                        <th>실제 동적 남은 필요</th>
+                        <th>현재 보유 수량 (입력)</th>
+                        <th>파티원 코멘트 (입력)</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-input-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- [일반 사용자 전용] 1. 최상위 제작 재료 현황 -->
+    <div class="section-card sec-my user-only">
         <div class="section-title">
             <span>재료 현황 (최상위 제작 재료)</span>
             <button class="toggle-btn" id="my-toggle-btn" onclick="toggleSection('my-items-list', 'my-toggle-btn')">접기 ▲</button>
@@ -719,8 +720,8 @@
         <div id="my-items-list" class="item-grid"></div>
     </div>
 
-    <!-- [2] 파티 재료 전체 총합 모아보기 -->
-    <div class="section-card sec-summary">
+    <!-- [일반 사용자 전용] 2. 파티 재료 전체 총합 모아보기 -->
+    <div class="section-card sec-summary user-only">
         <div class="section-title">
             <span>현재 제작 목표 재료 총합 모아보기</span>
             <button class="toggle-btn" id="sum-toggle-btn" onclick="toggleSection('summary-grid', 'sum-toggle-btn')">접기 ▲</button>
@@ -728,8 +729,8 @@
         <div id="summary-grid" class="summary-grid"></div>
     </div>
 
-    <!-- [3] 남은 재료 (하위/하하위 재료 트리) -->
-    <div class="section-card sec-rem">
+    <!-- [일반 사용자 전용] 3. 남은 재료 (하위/하하위 재료 트리) -->
+    <div class="section-card sec-rem user-only">
         <div class="section-title">
             <span>남은 재료 (하위 재료 포함)</span>
             <button class="toggle-btn" id="rem-toggle-btn" onclick="toggleSection('rem-items-list', 'rem-toggle-btn')">펴기 ▼</button>
@@ -936,7 +937,7 @@ function toggleAdmin() {
     if (input === ADMIN_PW) {
         isAdmin = true;
         document.body.classList.add('is-admin');
-        alert("편집자 모드 활성화 완료!");
+        alert("관리자 편집 모드가 활성화되었습니다!");
         render();
     } else if (input !== null) {
         alert("비밀번호가 틀렸습니다.");
@@ -1011,7 +1012,6 @@ function undoLastSave() {
     }
 }
 
-// 목표 ID와 재료 ID를 결합하여 개별 관리
 function updateQty(nodeId, val) {
     if (!viewGoalId) return;
     const storageKey = `${viewGoalId}_${nodeId}`;
@@ -1274,14 +1274,22 @@ function escapeHtml(str) {
     });
 }
 
-function processNode(node, depth, parentRem = 0, topItems, remItems, progressCalc, summaryMap) {
+// 동적 연쇄 필요수량 연산 함수 (상위 완성 시 하위 필요 수량 자동 감소)
+function processNodeDynamic(node, depth, parentRemainingNeed = 0, topItems, remItems, progressCalc, summaryMap, flatList) {
     const storageKey = `${viewGoalId}_${node.id}`;
-    const required = depth === 0 ? node.need : parentRem * node.ratio;
-    
-    // 목표 ID별 개별 데이터 조회
     const have = appData.have[storageKey] || 0;
-    const remaining = Math.max(0, required - have);
     const comment = appData.comments[storageKey] || "";
+
+    // 1. 실제 필요 수량 계산 (상위 재료의 남은 필요 수량 기준)
+    let required = 0;
+    if (depth === 0) {
+        required = node.need;
+    } else {
+        required = parentRemainingNeed * node.ratio;
+    }
+
+    // 2. 남은 필요 수량 계산
+    const remaining = Math.max(0, required - have);
 
     if (depth === 0) {
         progressCalc.total += required;
@@ -1301,8 +1309,13 @@ function processNode(node, depth, parentRem = 0, topItems, remItems, progressCal
         id: node.id, name: node.name, have, required, remaining, depth, ratio: node.ratio, comment
     });
 
+    if (flatList) {
+        flatList.push({ id: node.id, name: node.name, required, remaining, have, comment });
+    }
+
+    // 3. 자식 노드로 상위의 남은 필요량(remaining)을 전달하여 하위 수량 자동 차감 연쇄
     if (node.children) {
-        node.children.forEach(child => processNode(child, depth + 1, remaining, topItems, remItems, progressCalc, summaryMap));
+        node.children.forEach(child => processNodeDynamic(child, depth + 1, remaining, topItems, remItems, progressCalc, summaryMap, flatList));
     }
 }
 
@@ -1314,7 +1327,7 @@ function render() {
     appData.members.forEach(m => {
         const tag = document.createElement('div');
         tag.className = 'member-tag';
-        tag.innerHTML = `<span>${m}</span><span class="del-btn del-member" onclick="removeMember('${m}')">X</span>`;
+        tag.innerHTML = `<span>${m}</span>${isAdmin ? `<span class="del-btn" onclick="removeMember('${m}')">X</span>` : ''}`;
         memberContainer.appendChild(tag);
     });
 
@@ -1372,8 +1385,8 @@ function render() {
                     ${badgeHtml}
                 </div>
                 <div>
-                    ${!isMainActive ? `<button class="btn-activate" onclick="setActiveGoal(${goal.id}, event)">대표 목표로 변경</button>` : ''}
-                    <span class="del-btn del-member" onclick="removeGoal(${goal.id}, event)">삭제 X</span>
+                    ${isAdmin && !isMainActive ? `<button class="btn-activate" onclick="setActiveGoal(${goal.id}, event)">대표 목표로 변경</button>` : ''}
+                    ${isAdmin ? `<span class="del-btn" onclick="removeGoal(${goal.id}, event)">삭제 X</span>` : ''}
                 </div>
             `;
             goalContainer.appendChild(div);
@@ -1382,6 +1395,7 @@ function render() {
 
     const topItems = [];
     const remItems = [];
+    const flatList = [];
     const progressCalc = { total: 0, current: 0 };
     const summaryMap = {};
 
@@ -1389,12 +1403,31 @@ function render() {
         document.getElementById('active-goal-title').innerText = `현재 조회 중: [${viewGoalObj.maker}] ${recipes[viewGoalObj.weaponKey].name}`;
         
         recipes[viewGoalObj.weaponKey].tree.forEach(node => {
-            processNode(node, 0, 0, topItems, remItems, progressCalc, summaryMap);
+            processNodeDynamic(node, 0, 0, topItems, remItems, progressCalc, summaryMap, flatList);
         });
     } else {
         document.getElementById('active-goal-title').innerText = '현재 선택된 목표: 없음';
     }
 
+    // 관리자 빠른 수량 기입 테이블 (동적 남은 수량 반영)
+    const adminTbody = document.getElementById('admin-input-tbody');
+    adminTbody.innerHTML = '';
+    flatList.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td style="font-weight:bold; color:var(--text-main);">${item.name}</td>
+            <td style="color:var(--gold-main); font-weight:bold;">${item.remaining}개 (총필요 ${item.required}개)</td>
+            <td>
+                <input type="number" min="0" value="${item.have}" onchange="updateQty('${item.id}', this.value)">
+            </td>
+            <td>
+                <input type="text" value="${item.comment}" placeholder="코멘트 입력 (예: 경매장 구매완료)" onchange="updateComment('${item.id}', this.value)">
+            </td>
+        `;
+        adminTbody.appendChild(tr);
+    });
+
+    // 일반 사용자 뷰
     const myContainer = document.getElementById('my-items-list');
     myContainer.innerHTML = topItems.length === 0 ? '<div style="color:var(--text-sub); text-align:center; padding:12px;">선택된 목표가 없습니다.</div>' : '';
 
@@ -1416,10 +1449,6 @@ function render() {
                 </div>
             </div>
             ${item.comment ? `<div class="comment-row">${item.comment}</div>` : ''}
-            <div class="edit-controls">
-                <input type="number" class="input-num" min="0" value="${item.have}" placeholder="보유량" onchange="updateQty('${item.id}', this.value)">
-                <input type="text" class="input-comment" value="${item.comment}" placeholder="파티원 코멘트" onchange="updateComment('${item.id}', this.value)">
-            </div>
         `;
         myContainer.appendChild(card);
     });
@@ -1498,11 +1527,7 @@ function createRemCard(item) {
             </div>
             ${statusTag}
         </div>
-        ${item.comment && !isAdmin ? `<div class="comment-row">${item.comment}</div>` : ''}
-        <div class="edit-controls">
-            <input type="number" class="input-num" min="0" value="${item.have}" placeholder="보유량" onchange="updateQty('${item.id}', this.value)">
-            <input type="text" class="input-comment" value="${item.comment}" placeholder="파티원 코멘트" onchange="updateComment('${item.id}', this.value)">
-        </div>
+        ${item.comment ? `<div class="comment-row">${item.comment}</div>` : ''}
     `;
     return card;
 }
