@@ -12,7 +12,6 @@
             --text-main: #f1f5f9;
             --text-sub: #94a3b8;
             --gold-main: #f59e0b;
-            --gold-hover: #d97706;
             --accent-blue: #38bdf8;
             --accent-green: #22c55e;
             --accent-purple: #c084fc;
@@ -29,12 +28,8 @@
             line-height: 1.5;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1000px; margin: 0 auto; }
 
-        /* Header */
         header {
             background: rgba(21, 29, 42, 0.8);
             backdrop-filter: blur(8px);
@@ -70,7 +65,6 @@
 
         body.is-admin .admin-badge { display: inline-block; }
 
-        /* Overall Progress Bar */
         .progress-box {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -104,7 +98,6 @@
             transition: width 0.3s ease;
         }
 
-        /* Party Member Section */
         .party-box {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -123,11 +116,7 @@
             color: var(--accent-blue);
         }
 
-        .member-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
+        .member-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 
         .member-tag {
             background: #0b0f19;
@@ -150,12 +139,7 @@
 
         body.is-admin .del-member { display: inline; }
 
-        .add-member-form {
-            display: none;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
+        .add-member-form { display: none; gap: 8px; margin-top: 10px; }
         body.is-admin .add-member-form { display: flex; }
 
         .add-member-form input {
@@ -176,7 +160,6 @@
             cursor: pointer;
         }
 
-        /* Section Layout */
         .section-card {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -196,8 +179,8 @@
             align-items: center;
         }
 
-        .sec-summary .section-title { color: var(--accent-purple); }
         .sec-my .section-title { color: var(--accent-green); }
+        .sec-summary .section-title { color: var(--accent-purple); }
         .sec-rem .section-title { color: var(--gold-main); }
         .sec-board .section-title { color: var(--accent-blue); }
 
@@ -212,12 +195,8 @@
             transition: all 0.2s;
         }
 
-        .toggle-btn:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.15);
-        }
+        .toggle-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.15); }
 
-        /* Summary Grid */
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -234,10 +213,20 @@
             gap: 6px;
         }
 
-        .summary-name {
-            font-weight: bold;
-            font-size: 0.95rem;
-            color: var(--text-main);
+        .summary-card.is-common {
+            border: 1px solid var(--accent-purple);
+            background: rgba(192, 132, 252, 0.05);
+        }
+
+        .summary-name { font-weight: bold; font-size: 0.95rem; color: var(--text-main); }
+
+        .common-badge {
+            font-size: 0.7rem;
+            background: rgba(192, 132, 252, 0.2);
+            color: var(--accent-purple);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
         }
 
         .summary-stats {
@@ -247,12 +236,8 @@
             color: var(--text-sub);
         }
 
-        .summary-rem {
-            font-weight: bold;
-            color: var(--gold-main);
-        }
+        .summary-rem { font-weight: bold; color: var(--gold-main); }
 
-        /* Item Grid & Cards */
         .item-grid { display: flex; flex-direction: column; gap: 10px; }
 
         .item-card {
@@ -263,14 +248,6 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-        }
-
-        .depth-1 { margin-left: 20px; border-left: 3px solid #c084fc; }
-        .depth-2 { margin-left: 40px; border-left: 3px solid var(--gold-main); }
-
-        @media (max-width: 640px) {
-            .depth-1 { margin-left: 10px; }
-            .depth-2 { margin-left: 20px; }
         }
 
         .item-main-row {
@@ -294,7 +271,15 @@
         .qty-need { background-color: rgba(245, 158, 11, 0.15); color: var(--gold-main); }
         .qty-done { background-color: rgba(56, 189, 248, 0.15); color: var(--accent-blue); }
 
-        /* Board Styling */
+        .sub-group-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--accent-purple);
+            margin: 12px 0 6px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px dashed var(--card-border);
+        }
+
         .board-form {
             display: flex;
             flex-direction: column;
@@ -306,11 +291,7 @@
             border: 1px solid var(--card-border);
         }
 
-        .board-inputs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        .board-inputs { display: flex; gap: 10px; flex-wrap: wrap; }
 
         .board-inputs select, .board-inputs input {
             background: var(--card-bg);
@@ -349,11 +330,7 @@
             cursor: pointer;
         }
 
-        .board-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .board-list { display: flex; flex-direction: column; gap: 10px; }
 
         .board-item {
             background: #0b0f19;
@@ -373,10 +350,7 @@
             color: var(--text-sub);
         }
 
-        .board-writer {
-            font-weight: bold;
-            color: var(--accent-blue);
-        }
+        .board-writer { font-weight: bold; color: var(--accent-blue); }
 
         .board-actions button {
             background: transparent;
@@ -387,26 +361,9 @@
             margin-left: 6px;
         }
 
-        .board-actions button:hover {
-            color: var(--danger-red);
-        }
+        .board-actions button:hover { color: var(--danger-red); }
 
-        .board-content {
-            font-size: 0.95rem;
-            white-space: pre-wrap;
-        }
-
-        /* Comment & Inputs */
-        .comment-row {
-            font-size: 0.85rem;
-            color: var(--text-sub);
-            background: rgba(255,255,255,0.03);
-            padding: 6px 10px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .board-content { font-size: 0.95rem; white-space: pre-wrap; }
 
         .edit-controls {
             display: none;
@@ -429,7 +386,6 @@
         .input-num { width: 70px; text-align: right; }
         .input-comment { flex: 1; min-width: 150px; }
 
-        /* Floating Save Bar */
         .save-bar {
             position: fixed;
             bottom: 20px;
@@ -490,7 +446,16 @@
         </div>
     </div>
 
-    <!-- [0] 중복 재료 전체 총합 요약 (신규) -->
+    <!-- [1] 최상위 제작 재료 현황 (최상단 배치) -->
+    <div class="section-card sec-my">
+        <div class="section-title">
+            <span>재료 현황 (최상위 제작 재료)</span>
+            <button class="toggle-btn" id="my-toggle-btn" onclick="toggleSection('my-items-list', 'my-toggle-btn')">접기 ▲</button>
+        </div>
+        <div id="my-items-list" class="item-grid"></div>
+    </div>
+
+    <!-- [2] 파티 재료 전체 총합 모아보기 (그 아래 배치) -->
     <div class="section-card sec-summary">
         <div class="section-title">
             <span>파티 재료 전체 총합 모아보기</span>
@@ -499,25 +464,16 @@
         <div id="summary-grid" class="summary-grid"></div>
     </div>
 
-    <!-- [1] 재료 현황 (보유 재료) -->
-    <div class="section-card sec-my">
-        <div class="section-title">
-            <span>재료 현황 (현재 확보한 보유 재료)</span>
-            <button class="toggle-btn" id="my-toggle-btn" onclick="toggleSection('my-items-list', 'my-toggle-btn')">접기 ▲</button>
-        </div>
-        <div id="my-items-list" class="item-grid"></div>
-    </div>
-
-    <!-- [2] 남은 재료 (기본적으로 접힌 상태) -->
+    <!-- [3] 남은 재료 (하위/하하위 재료 트리) -->
     <div class="section-card sec-rem">
         <div class="section-title">
-            <span>남은 재료 (앞으로 더 모아야 하는 재료)</span>
+            <span>남은 재료 (하위 재료 포함)</span>
             <button class="toggle-btn" id="rem-toggle-btn" onclick="toggleSection('rem-items-list', 'rem-toggle-btn')">펴기 ▼</button>
         </div>
         <div id="rem-items-list" class="item-grid" style="display: none;"></div>
     </div>
 
-    <!-- [3] 파티원 공유 게시판 섹션 -->
+    <!-- [4] 파티원 공유 게시판 섹션 -->
     <div class="section-card sec-board">
         <div class="section-title">
             <span>파티원 공유 게시판</span>
@@ -620,7 +576,6 @@ let appData = {
 let isAdmin = false;
 const ADMIN_PW = "1111";
 
-// 히든 클릭 기능 (제목 3번 연타)
 let clickCount = 0;
 let clickTimer = null;
 
@@ -656,7 +611,6 @@ function toggleAdmin() {
     }
 }
 
-// 공통 범용 섹션 접기/펴기 토글
 function toggleSection(elementId, btnId) {
     const el = document.getElementById(elementId);
     const btn = document.getElementById(btnId);
@@ -713,7 +667,6 @@ function removeMember(name) {
     render();
 }
 
-/* 게시판 기능 */
 function addPost() {
     const writerSelect = document.getElementById('post-writer-select');
     const writer = writerSelect.value;
@@ -842,8 +795,8 @@ function escapeHtml(str) {
     });
 }
 
-// 재료 연산 및 수량 자동 합산
-function processNode(node, depth, parentRem = 0, myItems, remItems, progressCalc, summaryMap) {
+// 재료 트리 순회
+function processNode(node, depth, parentRem = 0, topItems, remItems, progressCalc, summaryMap) {
     const required = depth === 0 ? node.need : parentRem * node.ratio;
     const have = appData.have[node.id] || 0;
     const remaining = Math.max(0, required - have);
@@ -852,26 +805,23 @@ function processNode(node, depth, parentRem = 0, myItems, remItems, progressCalc
     if (depth === 0) {
         progressCalc.total += required;
         progressCalc.current += Math.min(have, required);
+        topItems.push({ id: node.id, name: node.name, have, required, remaining, comment });
     }
 
-    // 중복 재료 파티 전체 총합 누적
     if (!summaryMap[node.name]) {
-        summaryMap[node.name] = { req: 0, have: 0, rem: 0 };
+        summaryMap[node.name] = { req: 0, have: 0, rem: 0, count: 0 };
     }
     summaryMap[node.name].req += required;
     summaryMap[node.name].have += have;
     summaryMap[node.name].rem += remaining;
-
-    if (have > 0) {
-        myItems.push({ id: node.id, name: node.name, have, depth, comment });
-    }
+    summaryMap[node.name].count += 1;
 
     remItems.push({
         id: node.id, name: node.name, have, required, remaining, depth, ratio: node.ratio, comment
     });
 
     if (node.children) {
-        node.children.forEach(child => processNode(child, depth + 1, remaining, myItems, remItems, progressCalc, summaryMap));
+        node.children.forEach(child => processNode(child, depth + 1, remaining, topItems, remItems, progressCalc, summaryMap));
     }
 }
 
@@ -885,28 +835,60 @@ function render() {
         memberContainer.appendChild(tag);
     });
 
-    const myItems = [];
+    const topItems = [];
     const remItems = [];
     const progressCalc = { total: 0, current: 0 };
     const summaryMap = {};
 
-    recipeTree.forEach(node => processNode(node, 0, 0, myItems, remItems, progressCalc, summaryMap));
+    recipeTree.forEach(node => processNode(node, 0, 0, topItems, remItems, progressCalc, summaryMap));
 
-    // 0. 중복 재료 총합 요약 카드 렌더링
+    // 1. 재료 현황 (최상단 - 최상위 8개 재료만) 렌더링
+    const myContainer = document.getElementById('my-items-list');
+    myContainer.innerHTML = '';
+
+    topItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+
+        let statusTag = item.remaining === 0 
+            ? `<span class="item-qty-tag qty-done">제작 완료</span>`
+            : `<span class="item-qty-tag qty-need">남은 필요 ${item.remaining}개</span>`;
+
+        card.innerHTML = `
+            <div class="item-main-row">
+                <span class="item-name">${item.name} (${item.required}개 필요)</span>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="item-qty-tag qty-have">보유 ${item.have}개</span>
+                    ${statusTag}
+                </div>
+            </div>
+            ${item.comment ? `<div class="comment-row">${item.comment}</div>` : ''}
+            <div class="edit-controls">
+                <input type="number" class="input-num" min="0" value="${item.have}" placeholder="보유량" onchange="updateQty('${item.id}', this.value)">
+                <input type="text" class="input-comment" value="${item.comment}" placeholder="파티원 코멘트 (예: 파티원A 담당)" onchange="updateComment('${item.id}', this.value)">
+            </div>
+        `;
+        myContainer.appendChild(card);
+    });
+
+    // 2. 파티 재료 전체 총합 모아보기 (그 아래) 렌더링
     const summaryContainer = document.getElementById('summary-grid');
     summaryContainer.innerHTML = '';
     Object.keys(summaryMap).forEach(name => {
         const stat = summaryMap[name];
         if (stat.req > 0) {
             const card = document.createElement('div');
-            card.className = 'summary-card';
+            card.className = `summary-card ${stat.count > 1 ? 'is-common' : ''}`;
             card.innerHTML = `
-                <div class="summary-name">${name}</div>
+                <div class="summary-name">
+                    ${name}
+                    ${stat.count > 1 ? '<span class="common-badge">공통재료</span>' : ''}
+                </div>
                 <div class="summary-stats">
                     <span>총 필요: ${stat.req}개</span>
                     <span>보유: ${stat.have}개</span>
                 </div>
-                <div class="summary-rem">➔ 최종 남은필요: ${stat.rem}개</div>
+                <div class="summary-rem">➔ 남은 총 필요: ${stat.rem}개</div>
             `;
             summaryContainer.appendChild(card);
         }
@@ -917,55 +899,57 @@ function render() {
     document.getElementById('progress-bar').style.width = percent + '%';
     document.getElementById('progress-percent').innerText = percent + '%';
 
-    // 재료 현황 렌더링
-    const myContainer = document.getElementById('my-items-list');
-    myContainer.innerHTML = myItems.length === 0 ? '<div style="color:var(--text-sub); text-align:center; padding:12px;">현재 보유 중인 재료가 없습니다.</div>' : '';
-
-    myItems.forEach(item => {
-        const card = document.createElement('div');
-        card.className = `item-card depth-${item.depth}`;
-        card.innerHTML = `
-            <div class="item-main-row">
-                <span class="item-name">${item.name}</span>
-                <span class="item-qty-tag qty-have">현재 보유 ${item.have}개</span>
-            </div>
-            ${item.comment ? `<div class="comment-row">${item.comment}</div>` : ''}
-        `;
-        myContainer.appendChild(card);
-    });
-
-    // 남은 재료 렌더링
+    // 3. 남은 재료 (공통재료 / 개별재료 구분) 렌더링
     const remContainer = document.getElementById('rem-items-list');
     remContainer.innerHTML = '';
 
-    remItems.forEach(item => {
-        const card = document.createElement('div');
-        card.className = `item-card depth-${item.depth}`;
+    const commonItems = remItems.filter(i => summaryMap[i.name].count > 1);
+    const uniqueItems = remItems.filter(i => summaryMap[i.name].count === 1);
 
-        let statusTag = item.remaining === 0 
-            ? `<span class="item-qty-tag qty-done">제작 완료</span>`
-            : `<span class="item-qty-tag qty-need">남은 필요 ${item.remaining}개</span>`;
+    if (commonItems.length > 0) {
+        const commonGroupTitle = document.createElement('div');
+        commonGroupTitle.className = 'sub-group-title';
+        commonGroupTitle.innerText = '📌 여러 제작에 중복해서 들어가는 공통 재료 목록';
+        remContainer.appendChild(commonGroupTitle);
 
-        card.innerHTML = `
-            <div class="item-main-row">
-                <div>
-                    <span class="item-name">${item.name}</span>
-                    ${item.depth > 0 ? `<small style="color:var(--text-sub); margin-left:6px;">(1개당 ${item.ratio}개 필요)</small>` : ''}
-                </div>
-                ${statusTag}
-            </div>
+        commonItems.forEach(item => remContainer.appendChild(createRemCard(item)));
+    }
 
-            ${item.comment && !isAdmin ? `<div class="comment-row">${item.comment}</div>` : ''}
+    if (uniqueItems.length > 0) {
+        const uniqueGroupTitle = document.createElement('div');
+        uniqueGroupTitle.className = 'sub-group-title';
+        uniqueGroupTitle.innerText = '🔹 특정 제작 전용 단독 재료 목록';
+        remContainer.appendChild(uniqueGroupTitle);
 
-            <div class="edit-controls">
-                <input type="number" class="input-num" min="0" value="${item.have}" placeholder="보유량" onchange="updateQty('${item.id}', this.value)">
-                <input type="text" class="input-comment" value="${item.comment}" placeholder="파티원 코멘트 (예: 파티원A 10개 담당)" onchange="updateComment('${item.id}', this.value)">
-            </div>
-        `;
-        remContainer.appendChild(card);
-    });
+        uniqueItems.forEach(item => remContainer.appendChild(createRemCard(item)));
+    }
 
     renderBoard();
+}
+
+function createRemCard(item) {
+    const card = document.createElement('div');
+    card.className = `item-card depth-${item.depth}`;
+
+    let statusTag = item.remaining === 0 
+        ? `<span class="item-qty-tag qty-done">완료</span>`
+        : `<span class="item-qty-tag qty-need">남은 필요 ${item.remaining}개</span>`;
+
+    card.innerHTML = `
+        <div class="item-main-row">
+            <div>
+                <span class="item-name">${item.name}</span>
+                ${item.depth > 0 ? `<small style="color:var(--text-sub); margin-left:6px;">(1개당 ${item.ratio}개)</small>` : ''}
+            </div>
+            ${statusTag}
+        </div>
+        ${item.comment && !isAdmin ? `<div class="comment-row">${item.comment}</div>` : ''}
+        <div class="edit-controls">
+            <input type="number" class="input-num" min="0" value="${item.have}" placeholder="보유량" onchange="updateQty('${item.id}', this.value)">
+            <input type="text" class="input-comment" value="${item.comment}" placeholder="파티원 코멘트" onchange="updateComment('${item.id}', this.value)">
+        </div>
+    `;
+    return card;
 }
 
 loadData();
