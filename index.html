@@ -169,6 +169,7 @@
         }
 
         .goal-tags { display: flex; flex-direction: column; gap: 8px; }
+        
         .goal-item {
             background: #0b0f19;
             border: 1px solid var(--card-border);
@@ -186,14 +187,50 @@
             border-color: var(--accent-blue);
         }
 
-        .goal-item.active-goal {
+        /* 메인 진행 목표 강조 */
+        .goal-item.main-active {
             border: 1.5px solid var(--accent-green);
             background: rgba(34, 197, 94, 0.08);
-            box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
+        }
+
+        /* 현재 열람 중인 목표 선택 표시 */
+        .goal-item.view-selected {
+            border: 1.5px solid var(--accent-blue);
         }
 
         .goal-maker { color: var(--accent-blue); font-weight: bold; }
         .goal-target { color: var(--gold-main); font-weight: bold; margin-left: 6px; }
+
+        .badge-main {
+            font-size: 0.75rem;
+            background: rgba(34, 197, 94, 0.25);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .badge-viewing {
+            font-size: 0.75rem;
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
+        .badge-waiting {
+            font-size: 0.75rem;
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-sub);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
 
         .btn-activate {
             background: rgba(56, 189, 248, 0.2);
@@ -868,7 +905,7 @@ let appData = {
     lastUpdated: ""
 };
 
-let viewGoalId = null; // 현재 사용자가 선택해서 조회 중인 목표 ID
+let viewGoalId = null;
 let previousBackup = null;
 let isAdmin = false;
 const ADMIN_PW = "1111";
@@ -1037,13 +1074,11 @@ function removeGoal(goalId, e) {
     render();
 }
 
-// 클릭시 현황판 열람 대상을 변경
 function selectViewGoal(goalId) {
     viewGoalId = goalId;
     render();
 }
 
-// 관리자가 대표 메인 진행 목표로 변경
 function setActiveGoal(goalId, e) {
     if (e) e.stopPropagation();
     appData.activeGoalId = goalId;
@@ -1294,25 +1329,42 @@ function render() {
     if (appData.goals.length === 0) {
         goalContainer.innerHTML = '<div style="color:var(--text-sub); text-align:center; padding:8px;">등록된 제작 목표가 없습니다.</div>';
     } else {
-        // viewGoalId 가 없거나 올바르지 않으면 첫번째 목표 선택
         if (!viewGoalId || !appData.goals.find(g => g.id === viewGoalId)) {
             viewGoalId = appData.goals[0].id;
         }
 
         appData.goals.forEach(goal => {
             const isSelectedView = goal.id === viewGoalId;
+            const isMainActive = goal.id === appData.activeGoalId;
+
             if (isSelectedView) viewGoalObj = goal;
 
-            const isMainActive = goal.id === appData.activeGoalId;
             const wName = recipes[goal.weaponKey] ? recipes[goal.weaponKey].name : goal.weaponKey;
 
             const div = document.createElement('div');
-            div.className = `goal-item ${isSelectedView ? 'active-goal' : ''}`;
+            let classList = ['goal-item'];
+            if (isMainActive) classList.push('main-active');
+            if (isSelectedView) classList.push('view-selected');
+
+            div.className = classList.join(' ');
             div.onclick = () => selectViewGoal(goal.id);
+
+            // 뱃지 구분 렌더링
+            let badgeHtml = '';
+            if (isMainActive) {
+                badgeHtml += '<span class="badge-main">대표 진행 중</span>';
+            } else {
+                badgeHtml += '<span class="badge-waiting">대기 중</span>';
+            }
+
+            if (isSelectedView) {
+                badgeHtml += '<span class="badge-viewing">조회 중</span>';
+            }
 
             div.innerHTML = `
                 <div>
                     제작자: <span class="goal-maker">${goal.maker}</span> -> 제작물: <span class="goal-target">${wName}</span>
+                    ${badgeHtml}
                 </div>
                 <div>
                     ${!isMainActive ? `<button class="btn-activate" onclick="setActiveGoal(${goal.id}, event)">대표 목표로 변경</button>` : ''}
