@@ -34,7 +34,7 @@
             background: rgba(21, 29, 42, 0.8);
             backdrop-filter: blur(8px);
             border: 1px solid var(--card-border);
-            padding: 24px;
+            padding: 20px 24px;
             border-radius: 16px;
             margin-bottom: 20px;
             display: flex;
@@ -51,6 +51,12 @@
             color: var(--gold-main);
             cursor: pointer;
             user-select: none;
+        }
+
+        .update-time {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-top: 4px;
         }
 
         .admin-badge {
@@ -130,24 +136,26 @@
             gap: 6px;
         }
 
-        .del-member {
+        .del-btn {
             color: var(--danger-red);
             cursor: pointer;
             font-weight: bold;
-            display: none;
+            margin-left: 4px;
         }
 
+        .del-member { display: none; }
         body.is-admin .del-member { display: inline; }
 
         .add-member-form { display: none; gap: 8px; margin-top: 10px; }
-        body.is-admin .add-member-form { display: flex; }
+        body.is-admin .add-member-form { display: flex; flex-wrap: wrap; }
 
-        .add-member-form input {
+        .add-member-form input, .add-member-form select {
             padding: 6px 12px;
             background: #0b0f19;
             border: 1px solid var(--card-border);
             border-radius: 6px;
             color: white;
+            outline: none;
         }
 
         .btn-sm {
@@ -159,6 +167,49 @@
             font-weight: bold;
             cursor: pointer;
         }
+
+        .goal-tags { display: flex; flex-direction: column; gap: 8px; }
+        .goal-item {
+            background: #0b0f19;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .goal-item.active-goal {
+            border: 1px solid var(--accent-green);
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .goal-maker { color: var(--accent-blue); font-weight: bold; }
+        .goal-target { color: var(--gold-main); font-weight: bold; margin-left: 6px; }
+
+        .active-badge {
+            font-size: 0.75rem;
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--accent-green);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .btn-activate {
+            background: rgba(56, 189, 248, 0.2);
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        body.is-admin .btn-activate { display: inline-block; }
 
         .section-card {
             background-color: var(--card-bg);
@@ -182,7 +233,6 @@
         .sec-my .section-title { color: var(--accent-green); }
         .sec-summary .section-title { color: var(--accent-purple); }
         .sec-rem .section-title { color: var(--gold-main); }
-        .sec-board .section-title { color: var(--accent-blue); }
 
         .toggle-btn {
             background: rgba(255, 255, 255, 0.08);
@@ -280,11 +330,87 @@
             border-bottom: 1px dashed var(--card-border);
         }
 
+        /* Floating Board Trigger Button */
+        .floating-board-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, var(--accent-blue), #0284c7);
+            color: #000;
+            font-weight: 800;
+            padding: 14px 22px;
+            border-radius: 30px;
+            border: none;
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4);
+            cursor: pointer;
+            z-index: 900;
+            transition: all 0.2s;
+        }
+
+        .floating-board-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(56, 189, 248, 0.6);
+        }
+
+        /* Modal Overlay & Container */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 16px;
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 650px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 { font-size: 1.15rem; color: var(--accent-blue); margin: 0; }
+        .close-modal {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Board Form & Items inside Modal */
         .board-form {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 20px;
             background: #0b0f19;
             padding: 16px;
             border-radius: 10px;
@@ -342,6 +468,22 @@
             gap: 6px;
         }
 
+        .board-item.applied {
+            opacity: 0.6;
+            background: #080c14;
+            border-color: #1e293b;
+        }
+
+        .applied-badge {
+            font-size: 0.75rem;
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--accent-green);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
         .board-item-header {
             display: flex;
             justify-content: space-between;
@@ -362,6 +504,17 @@
         }
 
         .board-actions button:hover { color: var(--danger-red); }
+
+        .btn-apply-toggle {
+            background: rgba(34, 197, 94, 0.15) !important;
+            color: var(--accent-green) !important;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: none;
+        }
+
+        body.is-admin .btn-apply-toggle { display: inline-block; }
 
         .board-content { font-size: 0.95rem; white-space: pre-wrap; }
 
@@ -394,13 +547,14 @@
             width: 90%;
             max-width: 500px;
             display: none;
-            z-index: 100;
+            z-index: 800;
+            gap: 10px;
         }
 
-        body.is-admin .save-bar { display: block; }
+        body.is-admin .save-bar { display: flex; }
 
         .btn-save {
-            width: 100%;
+            flex: 2;
             padding: 14px;
             background-color: var(--gold-main);
             color: #000;
@@ -411,6 +565,18 @@
             cursor: pointer;
             box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
         }
+
+        .btn-undo {
+            flex: 1;
+            padding: 14px;
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--danger-red);
+            border: 1px solid var(--danger-red);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -419,6 +585,7 @@
     <header>
         <div class="title-area">
             <h1 id="secretTrigger">소울 리버레이트 제작 파티 현황판</h1>
+            <div class="update-time" id="last-update-time">최종 업데이트: -</div>
         </div>
         <span class="admin-badge" id="adminBadge">편집자 모드</span>
     </header>
@@ -426,7 +593,7 @@
     <!-- 전체 준비 완료율 ProgressBar -->
     <div class="progress-box">
         <div class="progress-title">
-            <span>전체 최상위 재료 준비율</span>
+            <span id="active-goal-title">현재 진행 중인 목표: 선택 안됨</span>
             <span id="progress-percent">0%</span>
         </div>
         <div class="bar-outer">
@@ -446,7 +613,30 @@
         </div>
     </div>
 
-    <!-- [1] 최상위 제작 재료 현황 (최상단 배치) -->
+    <!-- 파티 제작 목표 순서 섹션 -->
+    <div class="party-box">
+        <div class="party-header">
+            <span>파티 제작 목표 대기열 (순차 진행)</span>
+        </div>
+        <div class="goal-tags" id="goal-list"></div>
+        <div class="add-member-form">
+            <select id="goal-maker-select"></select>
+            <select id="goal-weapon-select">
+                <option value="lance">소울 리버레이트 랜스</option>
+                <option value="lyre">소울 리버레이트 리라</option>
+                <option value="" disabled>──────────</option>
+                <option value="" disabled>소울 리버레이트 한손검 (추후 예정)</option>
+                <option value="" disabled>소울 리버레이트 양손검 (추후 예정)</option>
+                <option value="" disabled>소울 리버레이트 너클 (추후 예정)</option>
+                <option value="" disabled>소울 리버레이트 활 (추후 예정)</option>
+                <option value="" disabled>소울 리버레이트 스태프 (추후 예정)</option>
+                <option value="" disabled>소울 리버레이트 실린더 (추후 예정)</option>
+            </select>
+            <button class="btn-sm" onclick="addGoal()">목표 추가</button>
+        </div>
+    </div>
+
+    <!-- [1] 최상위 제작 재료 현황 -->
     <div class="section-card sec-my">
         <div class="section-title">
             <span>재료 현황 (최상위 제작 재료)</span>
@@ -455,10 +645,10 @@
         <div id="my-items-list" class="item-grid"></div>
     </div>
 
-    <!-- [2] 파티 재료 전체 총합 모아보기 (그 아래 배치) -->
+    <!-- [2] 파티 재료 전체 총합 모아보기 -->
     <div class="section-card sec-summary">
         <div class="section-title">
-            <span>파티 재료 전체 총합 모아보기</span>
+            <span>현재 제작 목표 재료 총합 모아보기</span>
             <button class="toggle-btn" id="sum-toggle-btn" onclick="toggleSection('summary-grid', 'sum-toggle-btn')">접기 ▲</button>
         </div>
         <div id="summary-grid" class="summary-grid"></div>
@@ -472,107 +662,166 @@
         </div>
         <div id="rem-items-list" class="item-grid" style="display: none;"></div>
     </div>
+</div>
 
-    <!-- [4] 파티원 공유 게시판 섹션 -->
-    <div class="section-card sec-board">
-        <div class="section-title">
-            <span>파티원 공유 게시판</span>
+<!-- 플로팅 게시판 버튼 -->
+<button class="floating-board-btn" onclick="openBoardModal()">게시판 열기</button>
+
+<!-- 팝업 게시판 모달 -->
+<div class="modal-overlay" id="boardModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>파티원 공유 게시판</h2>
+            <button class="close-modal" onclick="closeBoardModal()">✕</button>
         </div>
-        
-        <div class="board-form">
-            <div class="board-inputs">
-                <select id="post-writer-select"></select>
-                <input type="password" id="post-pw" placeholder="비밀번호(4자리)">
+        <div class="modal-body">
+            <div class="board-form">
+                <div class="board-inputs">
+                    <select id="post-writer-select"></select>
+                    <input type="password" id="post-pw" placeholder="비밀번호(4자리)">
+                </div>
+                <textarea id="post-content" class="board-textarea" placeholder="파티원들에게 공유할 글을 남겨주세요"></textarea>
+                <button class="btn-board" onclick="addPost()">등록</button>
             </div>
-            <textarea id="post-content" class="board-textarea" placeholder="파티원들에게 공유할 글을 남겨주세요 (예: 힐웬합금 50개 확보해뒀습니다!)"></textarea>
-            <button class="btn-board" onclick="addPost()">등록</button>
-        </div>
 
-        <div id="board-list" class="board-list"></div>
+            <div id="board-list" class="board-list"></div>
+        </div>
     </div>
 </div>
 
-<!-- 저장하기 버튼 -->
+<!-- 저장하기 / 되돌리기 하단 바 -->
 <div class="save-bar">
+    <button class="btn-undo" onclick="undoLastSave()">이전으로 되돌리기</button>
     <button class="btn-save" onclick="saveData()">변경사항 저장하기</button>
 </div>
 
 <script>
-// 제작 레시피 데이터 트리
-const recipeTree = [
-    {
-        id: "m1", name: "강렬한 기억의 결정", need: 15,
-        children: [
-            { id: "m1_1", name: "마력이 깃든 융합제", ratio: 5 },
-            { id: "m1_2", name: "바리사이트", ratio: 10 },
-            { id: "m1_3", name: "초록빛 기억의 조각", ratio: 3 },
-            { id: "m1_4", name: "퓨어 젬스톤", ratio: 2 }
-        ]
-    },
-    { id: "m2", name: "단호한 칼날의 파편", need: 50 },
-    {
-        id: "m3", name: "마력이 깃든 금속", need: 48,
-        children: [
-            { id: "m3_1", name: "각성된 힘의 가루", ratio: 10 },
-            { id: "m3_2", name: "녹음이 감도는 금속 조각", ratio: 7 },
-            { id: "m3_3", name: "마력석", ratio: 20 },
-            { id: "m3_4", name: "젬스톤 파우더", ratio: 20 }
-        ]
-    },
-    {
-        id: "m4", name: "마력이 충만한 스핀 기어", need: 3,
-        children: [
+// 레시피 템플릿 데이터 (랜스 & 리라)
+const recipes = {
+    lance: {
+        name: "소울 리버레이트 랜스",
+        tree: [
             {
-                id: "m4_1", name: "강화된 스핀 기어", ratio: 3,
+                id: "m1", name: "강렬한 기억의 결정", need: 15,
                 children: [
-                    { id: "m4_1_1", name: "각성된 힘의 가루", ratio: 10 },
-                    { id: "m4_1_2", name: "순도 높은 강화제", ratio: 30 },
-                    { id: "m4_1_3", name: "스핀 기어", ratio: 10 }
+                    { id: "m1_1", name: "마력이 깃든 융합제", ratio: 5 },
+                    { id: "m1_2", name: "바리사이트", ratio: 10 },
+                    { id: "m1_3", name: "초록빛 기억의 조각", ratio: 3 },
+                    { id: "m1_4", name: "퓨어 젬스톤", ratio: 2 }
                 ]
             },
-            { id: "m4_2", name: "마력이 깃든 융합제", ratio: 3 },
-            { id: "m4_3", name: "브리 레흐의 기운이 깃든 문장", ratio: 3 },
-            { id: "m4_4", name: "오묘한 금속 조각", ratio: 10 }
-        ]
-    },
-    { id: "m5", name: "브리 레흐의 정수", need: 18 },
-    { id: "m6", name: "브리 레흐의 코어", need: 9 },
-    {
-        id: "m7", name: "순도 높은 융합의 힐웬 합금", need: 3,
-        children: [
-            { id: "m7_1", name: "마력이 깃든 융합제", ratio: 1 },
-            { id: "m7_2", name: "순도 높은 마력의 결정", ratio: 10 },
+            { id: "m2", name: "단호한 칼날의 파편", need: 50 },
             {
-                id: "m7_3", name: "순도 높은 힘의 결정", ratio: 5,
+                id: "m3", name: "마력이 깃든 금속", need: 48,
                 children: [
-                    { id: "m7_3_1", name: "각성된 힘의 가루", ratio: 10 },
-                    { id: "m7_3_2", name: "각성된 힘의 결정", ratio: 10 },
-                    { id: "m7_3_3", name: "각성된 힘의 조각", ratio: 10 },
-                    { id: "m7_3_4", name: "깨어난 힘의 정수", ratio: 20 },
-                    { id: "m7_3_5", name: "마력이 깃든 융합제", ratio: 3 }
+                    { id: "m3_1", name: "각성된 힘의 가루", ratio: 10 },
+                    { id: "m3_2", name: "녹음이 감도는 금속 조각", ratio: 7 },
+                    { id: "m3_3", name: "마력석", ratio: 20 },
+                    { id: "m3_4", name: "젬스톤 파우더", ratio: 20 }
                 ]
             },
-            { id: "m7_4", name: "힐웬 합금", ratio: 100 }
+            {
+                id: "m4", name: "마력이 충만한 스핀 기어", need: 3,
+                children: [
+                    {
+                        id: "m4_1", name: "강화된 스핀 기어", ratio: 3,
+                        children: [
+                            { id: "m4_1_1", name: "각성된 힘의 가루", ratio: 10 },
+                            { id: "m4_1_2", name: "순도 높은 강화제", ratio: 30 },
+                            { id: "m4_1_3", name: "스핀 기어", ratio: 10 }
+                        ]
+                    },
+                    { id: "m4_2", name: "마력이 깃든 융합제", ratio: 3 },
+                    { id: "m4_3", name: "브리 레흐의 기운이 깃든 문장", ratio: 3 },
+                    { id: "m4_4", name: "오묘한 금속 조각", ratio: 10 }
+                ]
+            },
+            { id: "m5", name: "브리 레흐의 정수", need: 18 },
+            { id: "m6", name: "브리 레흐의 코어", need: 9 },
+            {
+                id: "m7", name: "순도 높은 융합의 힐웬 합금", need: 3,
+                children: [
+                    { id: "m7_1", name: "마력이 깃든 융합제", ratio: 1 },
+                    { id: "m7_2", name: "순도 높은 마력의 결정", ratio: 10 },
+                    {
+                        id: "m7_3", name: "순도 높은 힘의 결정", ratio: 5,
+                        children: [
+                            { id: "m7_3_1", name: "각성된 힘의 가루", ratio: 10 },
+                            { id: "m7_3_2", name: "각성된 힘의 결정", ratio: 10 },
+                            { id: "m7_3_3", name: "각성된 힘의 조각", ratio: 10 },
+                            { id: "m7_3_4", name: "깨어난 힘의 정수", ratio: 20 },
+                            { id: "m7_3_5", name: "마력이 깃든 융합제", ratio: 3 }
+                        ]
+                    },
+                    { id: "m7_4", name: "힐웬 합금", ratio: 100 }
+                ]
+            },
+            {
+                id: "m8", name: "예리한 칼날", need: 20,
+                children: [
+                    { id: "m8_1", name: "날카롭게 결정화된 광물 조각", ratio: 6 },
+                    { id: "m8_2", name: "마력이 깃든 융합제", ratio: 1 },
+                    { id: "m8_3", name: "무딘 칼날조각", ratio: 5 },
+                    { id: "m8_4", name: "퓨어 젬스톤", ratio: 1 }
+                ]
+            }
         ]
     },
-    {
-        id: "m8", name: "예리한 칼날", need: 20,
-        children: [
-            { id: "m8_1", name: "날카롭게 결정화된 광물 조각", ratio: 6 },
-            { id: "m8_2", name: "마력이 깃든 융합제", ratio: 1 },
-            { id: "m8_3", name: "무딘 칼날조각", ratio: 5 },
-            { id: "m8_4", name: "퓨어 젬스톤", ratio: 1 }
+    lyre: {
+        name: "소울 리버레이트 리라",
+        tree: [
+            { id: "l1", name: "기교의 현", need: 3 },
+            { id: "l2", name: "노래의 별가루", need: 1 },
+            {
+                id: "l3", name: "마력이 충만한 고리", need: 1,
+                children: [
+                    { id: "l3_1", name: "강화된 금속판", ratio: 3 },
+                    { id: "l3_2", name: "마력이 깃든 융합제", ratio: 3 },
+                    { id: "l3_3", name: "브리 레흐의 기운이 깃든 문장", ratio: 3 },
+                    { id: "l3_4", name: "오묘한 가죽조각", ratio: 10 },
+                    { id: "l3_5", name: "특급 나무장작", ratio: 100 }
+                ]
+            },
+            { id: "l4", name: "브리 레흐의 정수", need: 15 },
+            { id: "l5", name: "브리 레흐의 코어", need: 8 },
+            { id: "l6", name: "선율의 금속판", need: 30 },
+            {
+                id: "l7", name: "순도 높은 융합의 나무판", need: 6,
+                children: [
+                    { id: "l7_1", name: "마력이 깃든 융합제", ratio: 1 },
+                    { id: "l7_2", name: "순도 높은 마력의 결정", ratio: 10 },
+                    {
+                        id: "l7_3", name: "순도 높은 힘의 결정", ratio: 5,
+                        children: [
+                            { id: "l7_3_1", name: "각성된 힘의 가루", ratio: 10 },
+                            { id: "l7_3_2", name: "각성된 힘의 결정", ratio: 10 },
+                            { id: "l7_3_3", name: "각성된 힘의 조각", ratio: 10 },
+                            { id: "l7_3_4", name: "깨어난 힘의 정수", ratio: 20 },
+                            { id: "l7_3_5", name: "마력이 깃든 융합제", ratio: 3 }
+                        ]
+                    },
+                    { id: "l7_4", name: "최고급 나무장작", ratio: 100 }
+                ]
+            },
+            { id: "l8", name: "조화의 나무판", need: 50 }
         ]
     }
-];
+};
 
 let appData = {
     have: {},
     comments: {},
     members: ["노아르파냐", "담야", "반류화"],
-    posts: []
+    goals: [
+        { id: 101, maker: "반류화", weaponKey: "lance" },
+        { id: 102, maker: "노아르파냐", weaponKey: "lyre" }
+    ],
+    activeGoalId: 101,
+    posts: [],
+    lastUpdated: ""
 };
 
+let previousBackup = null; // 되돌리기 백업 버퍼
 let isAdmin = false;
 const ADMIN_PW = "1111";
 
@@ -624,12 +873,37 @@ function toggleSection(elementId, btnId) {
     }
 }
 
+function openBoardModal() {
+    document.getElementById('boardModal').classList.add('open');
+}
+
+function closeBoardModal() {
+    document.getElementById('boardModal').classList.remove('open');
+}
+
+function getFormattedTime() {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+}
+
 function loadData() {
     const saved = localStorage.getItem('soul_lance_v2_data');
     if (saved) {
         try { 
             appData = JSON.parse(saved);
             if (!appData.posts) appData.posts = [];
+            if (!appData.goals || appData.goals.length === 0) {
+                appData.goals = [{ id: 101, maker: "반류화", weaponKey: "lance" }];
+            }
+            if (!appData.activeGoalId && appData.goals.length > 0) {
+                appData.activeGoalId = appData.goals[0].id;
+            }
             if (!appData.members || appData.members.length === 0) {
                 appData.members = ["노아르파냐", "담야", "반류화"];
             }
@@ -638,8 +912,24 @@ function loadData() {
 }
 
 function saveData() {
+    previousBackup = localStorage.getItem('soul_lance_v2_data'); // 되돌리기용 백업
+    appData.lastUpdated = getFormattedTime();
     localStorage.setItem('soul_lance_v2_data', JSON.stringify(appData));
-    alert("저장되었습니다! 파티원들에게 이 현황이 변경된 채로 보여집니다.");
+    alert("저장되었습니다! 파티원들에게 최신 현황이 공유됩니다.");
+    render();
+}
+
+function undoLastSave() {
+    if (!previousBackup) {
+        alert("되돌릴 수 있는 이전 저장 기록이 없습니다.");
+        return;
+    }
+    if (confirm("정말로 마지막 저장 직전 상태로 되돌리시겠습니까?")) {
+        localStorage.setItem('soul_lance_v2_data', previousBackup);
+        loadData();
+        render();
+        alert("성공적으로 이전 상태로 복구되었습니다.");
+    }
 }
 
 function updateQty(id, val) {
@@ -664,6 +954,42 @@ function addMember() {
 
 function removeMember(name) {
     appData.members = appData.members.filter(m => m !== name);
+    appData.goals = appData.goals.filter(g => g.maker !== name);
+    render();
+}
+
+function addGoal() {
+    const makerSelect = document.getElementById('goal-maker-select');
+    const weaponSelect = document.getElementById('goal-weapon-select');
+
+    const maker = makerSelect.value;
+    const weaponKey = weaponSelect.value;
+
+    if (!maker || !weaponKey) {
+        alert("제작자와 목표 무기를 선택해 주세요.");
+        return;
+    }
+
+    const newId = Date.now();
+    appData.goals.push({ id: newId, maker, weaponKey });
+
+    if (!appData.activeGoalId) {
+        appData.activeGoalId = newId;
+    }
+
+    render();
+}
+
+function removeGoal(goalId) {
+    appData.goals = appData.goals.filter(g => g.id !== goalId);
+    if (appData.activeGoalId === goalId) {
+        appData.activeGoalId = appData.goals.length > 0 ? appData.goals[0].id : null;
+    }
+    render();
+}
+
+function setActiveGoal(goalId) {
+    appData.activeGoalId = goalId;
     render();
 }
 
@@ -690,13 +1016,23 @@ function addPost() {
         writer,
         pw,
         content,
-        time: timeStr
+        time: timeStr,
+        isApplied: false
     });
 
     document.getElementById('post-content').value = '';
     document.getElementById('post-pw').value = '';
     saveDataQuietly();
     renderBoard();
+}
+
+function toggleApplyPost(id) {
+    const post = appData.posts.find(p => p.id === id);
+    if (post) {
+        post.isApplied = !post.isApplied;
+        saveDataQuietly();
+        renderBoard();
+    }
 }
 
 function deletePost(id) {
@@ -743,7 +1079,9 @@ function editPost(id) {
 }
 
 function saveDataQuietly() {
+    appData.lastUpdated = getFormattedTime();
     localStorage.setItem('soul_lance_v2_data', JSON.stringify(appData));
+    document.getElementById('last-update-time').innerText = `최종 업데이트: ${appData.lastUpdated}`;
 }
 
 function renderBoard() {
@@ -771,14 +1109,16 @@ function renderBoard() {
 
     appData.posts.forEach(post => {
         const item = document.createElement('div');
-        item.className = 'board-item';
+        item.className = `board-item ${post.isApplied ? 'applied' : ''}`;
         item.innerHTML = `
             <div class="board-item-header">
                 <div>
                     <span class="board-writer">${escapeHtml(post.writer)}</span>
                     <span style="font-size:0.75rem; margin-left:6px;">(${post.time})</span>
+                    ${post.isApplied ? '<span class="applied-badge">V 적용완료</span>' : ''}
                 </div>
                 <div class="board-actions">
+                    <button class="btn-apply-toggle" onclick="toggleApplyPost(${post.id})">${post.isApplied ? '적용취소' : '적용완료'}</button>
                     <button onclick="editPost(${post.id})">수정</button>
                     <button onclick="deletePost(${post.id})">삭제</button>
                 </div>
@@ -795,7 +1135,7 @@ function escapeHtml(str) {
     });
 }
 
-// 재료 트리 순회
+// 단일 목표에 대해 재료 트리 순회
 function processNode(node, depth, parentRem = 0, topItems, remItems, progressCalc, summaryMap) {
     const required = depth === 0 ? node.need : parentRem * node.ratio;
     const have = appData.have[node.id] || 0;
@@ -826,25 +1166,78 @@ function processNode(node, depth, parentRem = 0, topItems, remItems, progressCal
 }
 
 function render() {
+    // 최종 업데이트 일시 표기
+    document.getElementById('last-update-time').innerText = `최종 업데이트: ${appData.lastUpdated || '없음'}`;
+
+    // 1. 파티원 목록 렌더링
     const memberContainer = document.getElementById('member-list');
     memberContainer.innerHTML = '';
     appData.members.forEach(m => {
         const tag = document.createElement('div');
         tag.className = 'member-tag';
-        tag.innerHTML = `<span>${m}</span><span class="del-member" onclick="removeMember('${m}')">✕</span>`;
+        tag.innerHTML = `<span>${m}</span><span class="del-btn del-member" onclick="removeMember('${m}')">X</span>`;
         memberContainer.appendChild(tag);
     });
 
+    const goalMakerSelect = document.getElementById('goal-maker-select');
+    goalMakerSelect.innerHTML = '';
+    appData.members.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.innerText = m;
+        goalMakerSelect.appendChild(opt);
+    });
+
+    // 2. 목표 목록 렌더링 (단일 목표 활성화 지원)
+    const goalContainer = document.getElementById('goal-list');
+    goalContainer.innerHTML = '';
+
+    let activeGoalObj = null;
+
+    if (appData.goals.length === 0) {
+        goalContainer.innerHTML = '<div style="color:var(--text-sub); text-align:center; padding:8px;">등록된 제작 목표가 없습니다.</div>';
+    } else {
+        appData.goals.forEach(goal => {
+            const isActive = goal.id === appData.activeGoalId;
+            if (isActive) activeGoalObj = goal;
+
+            const wName = recipes[goal.weaponKey] ? recipes[goal.weaponKey].name : goal.weaponKey;
+
+            const div = document.createElement('div');
+            div.className = `goal-item ${isActive ? 'active-goal' : ''}`;
+            div.innerHTML = `
+                <div>
+                    제작자: <span class="goal-maker">${goal.maker}</span> -> 제작물: <span class="goal-target">${wName}</span>
+                    ${isActive ? '<span class="active-badge">현재 진행 중</span>' : ''}
+                </div>
+                <div>
+                    ${!isActive ? `<button class="btn-activate" onclick="setActiveGoal(${goal.id})">이 목표로 변경</button>` : ''}
+                    <span class="del-btn del-member" onclick="removeGoal(${goal.id})">삭제 X</span>
+                </div>
+            `;
+            goalContainer.appendChild(div);
+        });
+    }
+
+    // 3. 재료 트리 연산 (단 1개의 활성화된 목표에 대해서만 연산)
     const topItems = [];
     const remItems = [];
     const progressCalc = { total: 0, current: 0 };
     const summaryMap = {};
 
-    recipeTree.forEach(node => processNode(node, 0, 0, topItems, remItems, progressCalc, summaryMap));
+    if (activeGoalObj && recipes[activeGoalObj.weaponKey]) {
+        document.getElementById('active-goal-title').innerText = `현재 진행 중: [${activeGoalObj.maker}] ${recipes[activeGoalObj.weaponKey].name}`;
+        
+        recipes[activeGoalObj.weaponKey].tree.forEach(node => {
+            processNode(node, 0, 0, topItems, remItems, progressCalc, summaryMap);
+        });
+    } else {
+        document.getElementById('active-goal-title').innerText = '현재 진행 중인 목표: 없음';
+    }
 
-    // 1. 재료 현황 (최상단 - 최상위 8개 재료만) 렌더링
+    // [1] 재료 현황 (최상단) 렌더링
     const myContainer = document.getElementById('my-items-list');
-    myContainer.innerHTML = '';
+    myContainer.innerHTML = topItems.length === 0 ? '<div style="color:var(--text-sub); text-align:center; padding:12px;">선택된 활성 목표가 없습니다.</div>' : '';
 
     topItems.forEach(item => {
         const card = document.createElement('div');
@@ -865,15 +1258,16 @@ function render() {
             ${item.comment ? `<div class="comment-row">${item.comment}</div>` : ''}
             <div class="edit-controls">
                 <input type="number" class="input-num" min="0" value="${item.have}" placeholder="보유량" onchange="updateQty('${item.id}', this.value)">
-                <input type="text" class="input-comment" value="${item.comment}" placeholder="파티원 코멘트 (예: 파티원A 담당)" onchange="updateComment('${item.id}', this.value)">
+                <input type="text" class="input-comment" value="${item.comment}" placeholder="파티원 코멘트" onchange="updateComment('${item.id}', this.value)">
             </div>
         `;
         myContainer.appendChild(card);
     });
 
-    // 2. 파티 재료 전체 총합 모아보기 (그 아래) 렌더링
+    // [2] 파티 재료 전체 총합 모아보기
     const summaryContainer = document.getElementById('summary-grid');
-    summaryContainer.innerHTML = '';
+    summaryContainer.innerHTML = Object.keys(summaryMap).length === 0 ? '<div style="color:var(--text-sub); text-align:center; padding:12px;">표시할 합계 재료가 없습니다.</div>' : '';
+
     Object.keys(summaryMap).forEach(name => {
         const stat = summaryMap[name];
         if (stat.req > 0) {
@@ -888,7 +1282,7 @@ function render() {
                     <span>총 필요: ${stat.req}개</span>
                     <span>보유: ${stat.have}개</span>
                 </div>
-                <div class="summary-rem">➔ 남은 총 필요: ${stat.rem}개</div>
+                <div class="summary-rem">-> 남은 총 필요: ${stat.rem}개</div>
             `;
             summaryContainer.appendChild(card);
         }
@@ -899,7 +1293,7 @@ function render() {
     document.getElementById('progress-bar').style.width = percent + '%';
     document.getElementById('progress-percent').innerText = percent + '%';
 
-    // 3. 남은 재료 (공통재료 / 개별재료 구분) 렌더링
+    // [3] 남은 재료 렌더링
     const remContainer = document.getElementById('rem-items-list');
     remContainer.innerHTML = '';
 
@@ -909,7 +1303,7 @@ function render() {
     if (commonItems.length > 0) {
         const commonGroupTitle = document.createElement('div');
         commonGroupTitle.className = 'sub-group-title';
-        commonGroupTitle.innerText = '📌 여러 제작에 중복해서 들어가는 공통 재료 목록';
+        commonGroupTitle.innerText = '여러 제작에 중복해서 들어가는 공통 재료 목록';
         remContainer.appendChild(commonGroupTitle);
 
         commonItems.forEach(item => remContainer.appendChild(createRemCard(item)));
@@ -918,7 +1312,7 @@ function render() {
     if (uniqueItems.length > 0) {
         const uniqueGroupTitle = document.createElement('div');
         uniqueGroupTitle.className = 'sub-group-title';
-        uniqueGroupTitle.innerText = '🔹 특정 제작 전용 단독 재료 목록';
+        uniqueGroupTitle.innerText = '특정 제작 전용 단독 재료 목록';
         remContainer.appendChild(uniqueGroupTitle);
 
         uniqueItems.forEach(item => remContainer.appendChild(createRemCard(item)));
