@@ -173,38 +173,36 @@
             background: #0b0f19;
             border: 1px solid var(--card-border);
             border-radius: 8px;
-            padding: 10px 14px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .goal-item:hover {
+            border-color: var(--accent-blue);
         }
 
         .goal-item.active-goal {
-            border: 1px solid var(--accent-green);
+            border: 1.5px solid var(--accent-green);
             background: rgba(34, 197, 94, 0.08);
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
         }
 
         .goal-maker { color: var(--accent-blue); font-weight: bold; }
         .goal-target { color: var(--gold-main); font-weight: bold; margin-left: 6px; }
 
-        .active-badge {
-            font-size: 0.75rem;
-            background: rgba(34, 197, 94, 0.2);
-            color: var(--accent-green);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            margin-left: 8px;
-        }
-
         .btn-activate {
             background: rgba(56, 189, 248, 0.2);
             color: var(--accent-blue);
             border: 1px solid var(--accent-blue);
-            padding: 2px 8px;
+            padding: 4px 10px;
             border-radius: 4px;
             font-size: 0.75rem;
+            font-weight: bold;
             cursor: pointer;
             display: none;
         }
@@ -263,6 +261,11 @@
             gap: 6px;
         }
 
+        .summary-card.is-completed {
+            border-color: rgba(56, 189, 248, 0.4);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
         .summary-card.is-common {
             border: 1px solid var(--accent-purple);
             background: rgba(192, 132, 252, 0.05);
@@ -287,6 +290,7 @@
         }
 
         .summary-rem { font-weight: bold; color: var(--gold-main); }
+        .summary-completed-text { font-weight: bold; color: var(--accent-blue); }
 
         .item-grid { display: flex; flex-direction: column; gap: 10px; }
 
@@ -298,6 +302,12 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .item-card.is-done {
+            border: 1px solid var(--accent-green);
+            background: rgba(34, 197, 94, 0.04);
         }
 
         .item-main-row {
@@ -319,7 +329,7 @@
 
         .qty-have { background-color: rgba(34, 197, 94, 0.15); color: var(--accent-green); }
         .qty-need { background-color: rgba(245, 158, 11, 0.15); color: var(--gold-main); }
-        .qty-done { background-color: rgba(56, 189, 248, 0.15); color: var(--accent-blue); }
+        .qty-done { background-color: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
 
         .sub-group-title {
             font-size: 0.95rem;
@@ -330,11 +340,14 @@
             border-bottom: 1px dashed var(--card-border);
         }
 
-        /* Floating Board Trigger Button */
-        .floating-board-btn {
+        .floating-board-container {
             position: fixed;
             bottom: 25px;
             right: 25px;
+            z-index: 900;
+        }
+
+        .floating-board-btn {
             background: linear-gradient(135deg, var(--accent-blue), #0284c7);
             color: #000;
             font-weight: 800;
@@ -343,8 +356,8 @@
             border: none;
             box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4);
             cursor: pointer;
-            z-index: 900;
             transition: all 0.2s;
+            position: relative;
         }
 
         .floating-board-btn:hover {
@@ -352,7 +365,21 @@
             box-shadow: 0 12px 30px rgba(56, 189, 248, 0.6);
         }
 
-        /* Modal Overlay & Container */
+        .unread-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background-color: var(--danger-red);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 12px;
+            border: 2px solid var(--bg-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            display: none;
+        }
+
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -388,7 +415,8 @@
             align-items: center;
         }
 
-        .modal-header h2 { font-size: 1.15rem; color: var(--accent-blue); margin: 0; }
+        .modal-header h2 { font-size: 1.15rem; color: var(--accent-blue); margin: 0; display: flex; align-items: center; gap: 8px; }
+        
         .close-modal {
             background: transparent;
             border: none;
@@ -406,7 +434,6 @@
             gap: 16px;
         }
 
-        /* Board Form & Items inside Modal */
         .board-form {
             display: flex;
             flex-direction: column;
@@ -429,8 +456,8 @@
             outline: none;
         }
 
-        .board-inputs select { flex: 1; min-width: 140px; cursor: pointer; }
-        .board-inputs input[type="password"] { width: 130px; }
+        .board-inputs select { flex: 1; min-width: 130px; cursor: pointer; }
+        .board-inputs input[type="password"] { width: 120px; }
 
         .board-textarea {
             width: 100%;
@@ -460,24 +487,36 @@
 
         .board-item {
             background: #0b0f19;
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--accent-blue);
             border-radius: 8px;
             padding: 12px 16px;
             display: flex;
             flex-direction: column;
             gap: 6px;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.1);
         }
 
         .board-item.applied {
-            opacity: 0.6;
+            opacity: 0.55;
             background: #080c14;
-            border-color: #1e293b;
+            border-color: var(--card-border);
+            box-shadow: none;
         }
 
         .applied-badge {
             font-size: 0.75rem;
             background: rgba(34, 197, 94, 0.2);
             color: var(--accent-green);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
+        .target-weapon-tag {
+            font-size: 0.75rem;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--gold-main);
             padding: 2px 6px;
             border-radius: 4px;
             font-weight: bold;
@@ -593,7 +632,7 @@
     <!-- 전체 준비 완료율 ProgressBar -->
     <div class="progress-box">
         <div class="progress-title">
-            <span id="active-goal-title">현재 진행 중인 목표: 선택 안됨</span>
+            <span id="active-goal-title">현재 현황판: 선택 안됨</span>
             <span id="progress-percent">0%</span>
         </div>
         <div class="bar-outer">
@@ -616,7 +655,7 @@
     <!-- 파티 제작 목표 순서 섹션 -->
     <div class="party-box">
         <div class="party-header">
-            <span>파티 제작 목표 대기열 (순차 진행)</span>
+            <span>파티 제작 목표 대기열</span>
         </div>
         <div class="goal-tags" id="goal-list"></div>
         <div class="add-member-form">
@@ -664,20 +703,29 @@
     </div>
 </div>
 
-<!-- 플로팅 게시판 버튼 -->
-<button class="floating-board-btn" onclick="openBoardModal()">게시판 열기</button>
+<!-- 플로팅 게시판 버튼 & 미반영 알림 배지 -->
+<div class="floating-board-container">
+    <button class="floating-board-btn" onclick="openBoardModal()">
+        게시판 열기
+        <span class="unread-badge" id="floatingUnreadBadge">0</span>
+    </button>
+</div>
 
 <!-- 팝업 게시판 모달 -->
 <div class="modal-overlay" id="boardModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>파티원 공유 게시판</h2>
+            <h2>
+                <span>파티원 공유 게시판</span>
+                <small id="unapplied-count-text" style="font-size:0.8rem; color:var(--gold-main); font-weight:normal;"></small>
+            </h2>
             <button class="close-modal" onclick="closeBoardModal()">✕</button>
         </div>
         <div class="modal-body">
             <div class="board-form">
                 <div class="board-inputs">
                     <select id="post-writer-select"></select>
+                    <select id="post-target-select"></select>
                     <input type="password" id="post-pw" placeholder="비밀번호(4자리)">
                 </div>
                 <textarea id="post-content" class="board-textarea" placeholder="파티원들에게 공유할 글을 남겨주세요"></textarea>
@@ -696,7 +744,6 @@
 </div>
 
 <script>
-// 레시피 템플릿 데이터 (랜스 & 리라)
 const recipes = {
     lance: {
         name: "소울 리버레이트 랜스",
@@ -821,7 +868,8 @@ let appData = {
     lastUpdated: ""
 };
 
-let previousBackup = null; // 되돌리기 백업 버퍼
+let viewGoalId = null; // 현재 사용자가 선택해서 조회 중인 목표 ID
+let previousBackup = null;
 let isAdmin = false;
 const ADMIN_PW = "1111";
 
@@ -873,13 +921,8 @@ function toggleSection(elementId, btnId) {
     }
 }
 
-function openBoardModal() {
-    document.getElementById('boardModal').classList.add('open');
-}
-
-function closeBoardModal() {
-    document.getElementById('boardModal').classList.remove('open');
-}
+function openBoardModal() { document.getElementById('boardModal').classList.add('open'); }
+function closeBoardModal() { document.getElementById('boardModal').classList.remove('open'); }
 
 function getFormattedTime() {
     const now = new Date();
@@ -909,10 +952,11 @@ function loadData() {
             }
         } catch(e) {}
     }
+    viewGoalId = appData.activeGoalId;
 }
 
 function saveData() {
-    previousBackup = localStorage.getItem('soul_lance_v2_data'); // 되돌리기용 백업
+    previousBackup = localStorage.getItem('soul_lance_v2_data');
     appData.lastUpdated = getFormattedTime();
     localStorage.setItem('soul_lance_v2_data', JSON.stringify(appData));
     alert("저장되었습니다! 파티원들에게 최신 현황이 공유됩니다.");
@@ -976,26 +1020,42 @@ function addGoal() {
     if (!appData.activeGoalId) {
         appData.activeGoalId = newId;
     }
+    viewGoalId = newId;
 
     render();
 }
 
-function removeGoal(goalId) {
+function removeGoal(goalId, e) {
+    if (e) e.stopPropagation();
     appData.goals = appData.goals.filter(g => g.id !== goalId);
     if (appData.activeGoalId === goalId) {
         appData.activeGoalId = appData.goals.length > 0 ? appData.goals[0].id : null;
     }
+    if (viewGoalId === goalId) {
+        viewGoalId = appData.activeGoalId;
+    }
     render();
 }
 
-function setActiveGoal(goalId) {
+// 클릭시 현황판 열람 대상을 변경
+function selectViewGoal(goalId) {
+    viewGoalId = goalId;
+    render();
+}
+
+// 관리자가 대표 메인 진행 목표로 변경
+function setActiveGoal(goalId, e) {
+    if (e) e.stopPropagation();
     appData.activeGoalId = goalId;
+    viewGoalId = goalId;
     render();
 }
 
 function addPost() {
     const writerSelect = document.getElementById('post-writer-select');
+    const targetSelect = document.getElementById('post-target-select');
     const writer = writerSelect.value;
+    const targetWeapon = targetSelect.value;
     const pw = document.getElementById('post-pw').value.trim();
     const content = document.getElementById('post-content').value.trim();
 
@@ -1014,6 +1074,7 @@ function addPost() {
     appData.posts.unshift({
         id: Date.now(),
         writer,
+        targetWeapon,
         pw,
         content,
         time: timeStr,
@@ -1082,6 +1143,24 @@ function saveDataQuietly() {
     appData.lastUpdated = getFormattedTime();
     localStorage.setItem('soul_lance_v2_data', JSON.stringify(appData));
     document.getElementById('last-update-time').innerText = `최종 업데이트: ${appData.lastUpdated}`;
+    updateUnreadBadge();
+}
+
+function updateUnreadBadge() {
+    const unappliedList = (appData.posts || []).filter(p => !p.isApplied);
+    const count = unappliedList.length;
+
+    const badgeEl = document.getElementById('floatingUnreadBadge');
+    const textEl = document.getElementById('unapplied-count-text');
+
+    if (count > 0) {
+        badgeEl.style.display = 'inline-block';
+        badgeEl.innerText = count > 99 ? '99+' : count;
+        textEl.innerText = `(미반영 글 ${count}개)`;
+    } else {
+        badgeEl.style.display = 'none';
+        textEl.innerText = `(모든 글 반영 완료)`;
+    }
 }
 
 function renderBoard() {
@@ -1099,11 +1178,30 @@ function renderBoard() {
         });
     }
 
+    const targetSelect = document.getElementById('post-target-select');
+    targetSelect.innerHTML = '';
+    
+    if (appData.goals.length === 0) {
+        targetSelect.innerHTML = '<option value="전체/기타">전체/기타</option>';
+    } else {
+        appData.goals.forEach(goal => {
+            const wName = recipes[goal.weaponKey] ? recipes[goal.weaponKey].name : goal.weaponKey;
+            const opt = document.createElement('option');
+            opt.value = `${goal.maker}의 ${wName}`;
+            opt.innerText = `[목표] ${goal.maker} : ${wName}`;
+            if (goal.id === viewGoalId) {
+                opt.selected = true;
+            }
+            targetSelect.appendChild(opt);
+        });
+    }
+
     const container = document.getElementById('board-list');
     container.innerHTML = '';
 
     if (!appData.posts || appData.posts.length === 0) {
         container.innerHTML = '<div style="color:var(--text-sub); text-align:center; padding:12px;">작성된 게시글이 없습니다.</div>';
+        updateUnreadBadge();
         return;
     }
 
@@ -1114,6 +1212,7 @@ function renderBoard() {
             <div class="board-item-header">
                 <div>
                     <span class="board-writer">${escapeHtml(post.writer)}</span>
+                    ${post.targetWeapon ? `<span class="target-weapon-tag">${escapeHtml(post.targetWeapon)}</span>` : ''}
                     <span style="font-size:0.75rem; margin-left:6px;">(${post.time})</span>
                     ${post.isApplied ? '<span class="applied-badge">V 적용완료</span>' : ''}
                 </div>
@@ -1127,6 +1226,8 @@ function renderBoard() {
         `;
         container.appendChild(item);
     });
+
+    updateUnreadBadge();
 }
 
 function escapeHtml(str) {
@@ -1135,7 +1236,6 @@ function escapeHtml(str) {
     });
 }
 
-// 단일 목표에 대해 재료 트리 순회
 function processNode(node, depth, parentRem = 0, topItems, remItems, progressCalc, summaryMap) {
     const required = depth === 0 ? node.need : parentRem * node.ratio;
     const have = appData.have[node.id] || 0;
@@ -1166,10 +1266,8 @@ function processNode(node, depth, parentRem = 0, topItems, remItems, progressCal
 }
 
 function render() {
-    // 최종 업데이트 일시 표기
     document.getElementById('last-update-time').innerText = `최종 업데이트: ${appData.lastUpdated || '없음'}`;
 
-    // 1. 파티원 목록 렌더링
     const memberContainer = document.getElementById('member-list');
     memberContainer.innerHTML = '';
     appData.members.forEach(m => {
@@ -1188,68 +1286,73 @@ function render() {
         goalMakerSelect.appendChild(opt);
     });
 
-    // 2. 목표 목록 렌더링 (단일 목표 활성화 지원)
     const goalContainer = document.getElementById('goal-list');
     goalContainer.innerHTML = '';
 
-    let activeGoalObj = null;
+    let viewGoalObj = null;
 
     if (appData.goals.length === 0) {
         goalContainer.innerHTML = '<div style="color:var(--text-sub); text-align:center; padding:8px;">등록된 제작 목표가 없습니다.</div>';
     } else {
-        appData.goals.forEach(goal => {
-            const isActive = goal.id === appData.activeGoalId;
-            if (isActive) activeGoalObj = goal;
+        // viewGoalId 가 없거나 올바르지 않으면 첫번째 목표 선택
+        if (!viewGoalId || !appData.goals.find(g => g.id === viewGoalId)) {
+            viewGoalId = appData.goals[0].id;
+        }
 
+        appData.goals.forEach(goal => {
+            const isSelectedView = goal.id === viewGoalId;
+            if (isSelectedView) viewGoalObj = goal;
+
+            const isMainActive = goal.id === appData.activeGoalId;
             const wName = recipes[goal.weaponKey] ? recipes[goal.weaponKey].name : goal.weaponKey;
 
             const div = document.createElement('div');
-            div.className = `goal-item ${isActive ? 'active-goal' : ''}`;
+            div.className = `goal-item ${isSelectedView ? 'active-goal' : ''}`;
+            div.onclick = () => selectViewGoal(goal.id);
+
             div.innerHTML = `
                 <div>
                     제작자: <span class="goal-maker">${goal.maker}</span> -> 제작물: <span class="goal-target">${wName}</span>
-                    ${isActive ? '<span class="active-badge">현재 진행 중</span>' : ''}
                 </div>
                 <div>
-                    ${!isActive ? `<button class="btn-activate" onclick="setActiveGoal(${goal.id})">이 목표로 변경</button>` : ''}
-                    <span class="del-btn del-member" onclick="removeGoal(${goal.id})">삭제 X</span>
+                    ${!isMainActive ? `<button class="btn-activate" onclick="setActiveGoal(${goal.id}, event)">대표 목표로 변경</button>` : ''}
+                    <span class="del-btn del-member" onclick="removeGoal(${goal.id}, event)">삭제 X</span>
                 </div>
             `;
             goalContainer.appendChild(div);
         });
     }
 
-    // 3. 재료 트리 연산 (단 1개의 활성화된 목표에 대해서만 연산)
     const topItems = [];
     const remItems = [];
     const progressCalc = { total: 0, current: 0 };
     const summaryMap = {};
 
-    if (activeGoalObj && recipes[activeGoalObj.weaponKey]) {
-        document.getElementById('active-goal-title').innerText = `현재 진행 중: [${activeGoalObj.maker}] ${recipes[activeGoalObj.weaponKey].name}`;
+    if (viewGoalObj && recipes[viewGoalObj.weaponKey]) {
+        document.getElementById('active-goal-title').innerText = `현재 조회 중: [${viewGoalObj.maker}] ${recipes[viewGoalObj.weaponKey].name}`;
         
-        recipes[activeGoalObj.weaponKey].tree.forEach(node => {
+        recipes[viewGoalObj.weaponKey].tree.forEach(node => {
             processNode(node, 0, 0, topItems, remItems, progressCalc, summaryMap);
         });
     } else {
-        document.getElementById('active-goal-title').innerText = '현재 진행 중인 목표: 없음';
+        document.getElementById('active-goal-title').innerText = '현재 선택된 목표: 없음';
     }
 
-    // [1] 재료 현황 (최상단) 렌더링
     const myContainer = document.getElementById('my-items-list');
-    myContainer.innerHTML = topItems.length === 0 ? '<div style="color:var(--text-sub); text-align:center; padding:12px;">선택된 활성 목표가 없습니다.</div>' : '';
+    myContainer.innerHTML = topItems.length === 0 ? '<div style="color:var(--text-sub); text-align:center; padding:12px;">선택된 목표가 없습니다.</div>' : '';
 
     topItems.forEach(item => {
+        const isDone = item.remaining === 0;
         const card = document.createElement('div');
-        card.className = 'item-card';
+        card.className = `item-card ${isDone ? 'is-done' : ''}`;
 
-        let statusTag = item.remaining === 0 
-            ? `<span class="item-qty-tag qty-done">제작 완료</span>`
+        let statusTag = isDone
+            ? `<span class="item-qty-tag qty-done">V 수집 완료</span>`
             : `<span class="item-qty-tag qty-need">남은 필요 ${item.remaining}개</span>`;
 
         card.innerHTML = `
             <div class="item-main-row">
-                <span class="item-name">${item.name} (${item.required}개 필요)</span>
+                <span class="item-name">${item.name}</span>
                 <div style="display:flex; align-items:center; gap:8px;">
                     <span class="item-qty-tag qty-have">보유 ${item.have}개</span>
                     ${statusTag}
@@ -1264,15 +1367,15 @@ function render() {
         myContainer.appendChild(card);
     });
 
-    // [2] 파티 재료 전체 총합 모아보기
     const summaryContainer = document.getElementById('summary-grid');
     summaryContainer.innerHTML = Object.keys(summaryMap).length === 0 ? '<div style="color:var(--text-sub); text-align:center; padding:12px;">표시할 합계 재료가 없습니다.</div>' : '';
 
     Object.keys(summaryMap).forEach(name => {
         const stat = summaryMap[name];
+        const isDone = stat.rem === 0;
         if (stat.req > 0) {
             const card = document.createElement('div');
-            card.className = `summary-card ${stat.count > 1 ? 'is-common' : ''}`;
+            card.className = `summary-card ${stat.count > 1 ? 'is-common' : ''} ${isDone ? 'is-completed' : ''}`;
             card.innerHTML = `
                 <div class="summary-name">
                     ${name}
@@ -1282,18 +1385,18 @@ function render() {
                     <span>총 필요: ${stat.req}개</span>
                     <span>보유: ${stat.have}개</span>
                 </div>
-                <div class="summary-rem">-> 남은 총 필요: ${stat.rem}개</div>
+                <div class="${isDone ? 'summary-completed-text' : 'summary-rem'}">
+                    ${isDone ? 'V 준비 완료' : `-> 남은 총 필요: ${stat.rem}개`}
+                </div>
             `;
             summaryContainer.appendChild(card);
         }
     });
 
-    // 프로그레스바 렌더링
     const percent = progressCalc.total > 0 ? Math.round((progressCalc.current / progressCalc.total) * 100) : 0;
     document.getElementById('progress-bar').style.width = percent + '%';
     document.getElementById('progress-percent').innerText = percent + '%';
 
-    // [3] 남은 재료 렌더링
     const remContainer = document.getElementById('rem-items-list');
     remContainer.innerHTML = '';
 
@@ -1322,11 +1425,12 @@ function render() {
 }
 
 function createRemCard(item) {
+    const isDone = item.remaining === 0;
     const card = document.createElement('div');
-    card.className = `item-card depth-${item.depth}`;
+    card.className = `item-card depth-${item.depth} ${isDone ? 'is-done' : ''}`;
 
-    let statusTag = item.remaining === 0 
-        ? `<span class="item-qty-tag qty-done">완료</span>`
+    let statusTag = isDone 
+        ? `<span class="item-qty-tag qty-done">V 완료</span>`
         : `<span class="item-qty-tag qty-need">남은 필요 ${item.remaining}개</span>`;
 
     card.innerHTML = `
