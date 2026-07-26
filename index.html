@@ -187,13 +187,11 @@
             border-color: var(--accent-blue);
         }
 
-        /* 메인 진행 목표 강조 */
         .goal-item.main-active {
             border: 1.5px solid var(--accent-green);
             background: rgba(34, 197, 94, 0.08);
         }
 
-        /* 현재 열람 중인 목표 선택 표시 */
         .goal-item.view-selected {
             border: 1.5px solid var(--accent-blue);
         }
@@ -1013,13 +1011,18 @@ function undoLastSave() {
     }
 }
 
-function updateQty(id, val) {
-    appData.have[id] = Math.max(0, parseInt(val) || 0);
+// 목표 ID와 재료 ID를 결합하여 개별 관리
+function updateQty(nodeId, val) {
+    if (!viewGoalId) return;
+    const storageKey = `${viewGoalId}_${nodeId}`;
+    appData.have[storageKey] = Math.max(0, parseInt(val) || 0);
     render();
 }
 
-function updateComment(id, val) {
-    appData.comments[id] = val;
+function updateComment(nodeId, val) {
+    if (!viewGoalId) return;
+    const storageKey = `${viewGoalId}_${nodeId}`;
+    appData.comments[storageKey] = val;
     render();
 }
 
@@ -1272,10 +1275,13 @@ function escapeHtml(str) {
 }
 
 function processNode(node, depth, parentRem = 0, topItems, remItems, progressCalc, summaryMap) {
+    const storageKey = `${viewGoalId}_${node.id}`;
     const required = depth === 0 ? node.need : parentRem * node.ratio;
-    const have = appData.have[node.id] || 0;
+    
+    // 목표 ID별 개별 데이터 조회
+    const have = appData.have[storageKey] || 0;
     const remaining = Math.max(0, required - have);
-    const comment = appData.comments[node.id] || "";
+    const comment = appData.comments[storageKey] || "";
 
     if (depth === 0) {
         progressCalc.total += required;
@@ -1349,7 +1355,6 @@ function render() {
             div.className = classList.join(' ');
             div.onclick = () => selectViewGoal(goal.id);
 
-            // 뱃지 구분 렌더링
             let badgeHtml = '';
             if (isMainActive) {
                 badgeHtml += '<span class="badge-main">대표 진행 중</span>';
