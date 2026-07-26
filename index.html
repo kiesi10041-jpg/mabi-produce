@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소울 리버레이트 랜스 - 파티 제작 현황판</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151d2a;
+            --card-border: #233146;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --gold-main: #f59e0b;
+            --gold-hover: #d97706;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --danger-red: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px 12px 100px 12px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background: rgba(21, 29, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--card-border);
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .title-area h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold-main);
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-badge {
+            font-size: 0.75rem;
+            background-color: var(--danger-red);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: none;
+        }
+
+        body.is-admin .admin-badge { display: inline-block; }
+
+        /* Overall Progress Bar */
+        .progress-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .progress-title {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--gold-main);
+        }
+
+        .bar-outer {
+            width: 100%;
+            height: 12px;
+            background-color: #0b0f19;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+        }
+
+        .bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-main), var(--accent-green));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Party Member Section */
+        .party-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+
+        .party-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--accent-blue);
+        }
+
+        .member-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .member-tag {
+            background: #0b0f19;
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .del-member {
+            color: var(--danger-red);
+            cursor: pointer;
+            font-weight: bold;
+            display: none;
+        }
+
+        body.is-admin .del-member { display: inline; }
+
+        .add-member-form {
+            display: none;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        body.is-admin .add-member-form { display: flex; }
+
+        .add-member-form input {
+            padding: 6px 12px;
+            background: #0b0f19;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            background: var(--gold-main);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Section Layout */
+        .section-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sec-my .section-title { color: var(--accent-green); }
+        .sec-rem .section-title { color: var(--gold-main); }
+        .sec-board .section-title { color: var(--accent-blue); }
+
+        /* Item Grid & Cards */
+        .item-grid { display: flex; flex-direction: column; gap: 10px; }
+
+        .item-card {
+            background-color: #0b0f19;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .depth-1 { margin-left: 20px; border-left: 3px solid #c084fc; }
+        .depth-2 { margin-left: 40px; border-left: 3px solid var(--gold-main); }
+
+        @media (max-width: 640px) {
+            .depth-1 { margin-left: 10px; }
+            .depth-2 { margin-left: 20px; }
+        }
+
+        .item-main-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .item-name { font-size: 1rem; font-weight: 700; }
+
+        .item-qty-tag {
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .qty-have { background-color: rgba(34, 197, 94, 0.15); color: var(--accent-green); }
+        .qty-need { background-color: rgba(245, 158, 11, 0.15); color: var(--gold-main); }
+        .qty-done { background-color: rgba(56, 189, 248, 0.15); color: var(--accent-blue); }
+
+        /* Board Styling */
+        .board-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #0b0f19;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+        }
+
+        .board-inputs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .board-inputs input {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+
+        .board-inputs input[type="text"] { flex: 1; min-width: 120px; }
+        .board-inputs input[type="password"] { width: 120px; }
+
+        .board-textarea {
+            width: 100%;
+            height: 70px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: white;
+            padding: 10px;
+            font-size: 0.9rem;
+            resize: none;
+        }
+
+        .btn-board {
+            align-self: flex-end;
+            padding: 8px 20px;
+            background: var(--accent-blue);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .board-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .board-item {
+            background: #0b0f19;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .board-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .board-writer {
+            font-weight: bold;
+            color: var(--accent-blue);
+        }
+
+        .board-actions button {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+            cursor: pointer;
+            margin-left: 6px;
+        }
+
+        .board-actions button:hover {
+            color: var(--danger-red);
+        }
+
+        .board-content {
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+        }
+
+        /* Comment & Inputs */
+        .comment-row {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            background: rgba(255,255,255,0.03);
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .edit-controls {
+            display: none;
+            gap: 10px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        body.is-admin .edit-controls { display: flex; }
+
+        .edit-controls input {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: white;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+        }
+
+        .input-num { width: 70px; text-align: right; }
+        .input-comment { flex: 1; min-width: 150px; }
+
+        /* Floating Save Bar */
+        .save-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 500px;
+            display: none;
+            z-index: 100;
+        }
+
+        body.is-admin .save-bar { display: block; }
+
+        .btn-save {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--gold-main);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="title-area">
+            <h1 id="secretTrigger">소울 리버레이트 랜스 파티 현황판</h1>
+        </div>
+        <span class="admin-badge" id="adminBadge">편집자 모드</span>
+    </header>
+
+    <!-- 전체 준비 완료율 ProgressBar -->
+    <div class="progress-box">
+        <div class="progress-title">
+            <span>전체 최상위 재료 준비율</span>
+            <span id="progress-percent">0%</span>
+        </div>
+        <div class="bar-outer">
+            <div id="progress-bar" class="bar-inner"></div>
+        </div>
+    </div>
+
+    <!-- 파티원 목록 섹션 -->
+    <div class="party-box">
+        <div class="party-header">
+            <span>참가 파티원 목록</span>
+        </div>
+        <div class="member-tags" id="member-list"></div>
+        <div class="add-member-form">
+            <input type="text" id="new-member-name" placeholder="파티원 이름 입력">
+            <button class="btn-sm" onclick="addMember()">파티원 추가</button>
+        </div>
+    </div>
+
+    <!-- [1] 재료 현황 (내가/파티가 현재 확보한 재료) -->
+    <div class="section-card sec-my">
+        <h2 class="section-title">재료 현황 (현재 확보한 보유 재료)</h2>
+        <div id="my-items-list" class="item-grid"></div>
+    </div>
+
+    <!-- [2] 남은 재료 (하위 배율 포함 잔여 수량) -->
+    <div class="section-card sec-rem">
+        <h2 class="section-title">남은 재료 (앞으로 더 모아야 하는 재료)</h2>
+        <div id="rem-items-list" class="item-grid"></div>
+    </div>
+
+    <!-- [3] 파티원 게시판 섹션 -->
+    <div class="section-card sec-board">
+        <h2 class="section-title">파티원 공유 게시판</h2>
+        
+        <!-- 게시글 작성 폼 -->
+        <div class="board-form">
+            <div class="board-inputs">
+                <input type="text" id="post-writer" placeholder="작성자 이름">
+                <input type="password" id="post-pw" placeholder="비밀번호(4자리)">
+            </div>
+            <textarea id="post-content" class="board-textarea" placeholder="파티원들에게 공유할 글을 남겨주세요 (예: 힐웬합금 50개 확보해뒀습니다!)"></textarea>
+            <button class="btn-board" onclick="addPost()">등록</button>
+        </div>
+
+        <!-- 게시글 목록 -->
+        <div id="board-list" class="board-list"></div>
+    </div>
+</div>
+
+<!-- 저장하기 버튼 -->
+<div class="save-bar">
+    <button class="btn-save" onclick="saveData()">변경사항 저장하기</button>
+</div>
+
+<script>
+// 제작 레시피 데이터 트리
+const recipeTree = [
+    {
+        id: "m1", name: "강렬한 기억의 결정", need: 15,
+        children: [
+            { id: "m1_1", name: "마력이 깃든 융합제", ratio: 5 },
+            { id: "m1_2", name: "바리사이트", ratio: 10 },
+            { id: "m1_3", name: "초록빛 기억의 조각", ratio: 3 },
+            { id: "m1_4", name: "퓨어 젬스톤", ratio: 2 }
+        ]
+    },
+    { id: "m2", name: "단호한 칼날의 파편", need: 50 },
+    {
+        id: "m3", name: "마력이 깃든 금속", need: 48,
+        children: [
+            { id: "m3_1", name: "각성된 힘의 가루", ratio: 10 },
+            { id: "m3_2", name: "녹음이 감도는 금속 조각", ratio: 7 },
+            { id: "m3_3", name: "마력석", ratio: 20 },
+            { id: "m3_4", name: "젬스톤 파우더", ratio: 20 }
+        ]
+    },
+    {
+        id: "m4", name: "마력이 충만한 스핀 기어", need: 3,
+        children: [
+            {
+                id: "m4_1", name: "강화된 스핀 기어", ratio: 3,
+                children: [
+                    { id: "m4_1_1", name: "각성된 힘의 가루", ratio: 10 },
+                    { id: "m4_1_2", name: "순도 높은 강화제", ratio: 30 },
+                    { id: "m4_1_3", name: "스핀 기어", ratio: 10 }
+                ]
+            },
+            { id: "m4_2", name: "마력이 깃든 융합제", ratio: 3 },
+            { id: "m4_3", name: "브리 레흐의 기운이 깃든 문장", ratio: 3 },
+            { id: "m4_4", name: "오묘한 금속 조각", ratio: 10 }
+        ]
+    },
+    { id: "m5", name: "브리 레흐의 정수", need: 18 },
+    { id: "m6", name: "브리 레흐의 코어", need: 9 },
+    {
+        id: "m7", name: "순도 높은 융합의 힐웬 합금", need: 3,
+        children: [
+            { id: "m7_1", name: "마력이 깃든 융합제", ratio: 1 },
+            { id: "m7_2", name: "순도 높은 마력의 결정", ratio: 10 },
+            {
+                id: "m7_3", name: "순도 높은 힘의 결정", ratio: 5,
+                children: [
+                    { id: "m7_3_1", name: "각성된 힘의 가루", ratio: 10 },
+                    { id: "m7_3_2", name: "각성된 힘의 결정", ratio: 10 },
+                    { id: "m7_3_3", name: "각성된 힘의 조각", ratio: 10 },
+                    { id: "m7_3_4", name: "깨어난 힘의 정수", ratio: 20 },
+                    { id: "m7_3_5", name: "마력이 깃든 융합제", ratio: 3 }
+                ]
+            },
+            { id: "m7_4", name: "힐웬 합금", ratio: 100 }
+        ]
+    },
+    {
+        id: "m8", name: "예리한 칼날", need: 20,
+        children: [
+            { id: "m8_1", name: "날카롭게 결정화된 광물 조각", ratio: 6 },
+            { id: "m8_2", name: "마력이 깃든 융합제", ratio: 1 },
+            { id: "m8_3", name: "무딘 칼날조각", ratio: 5 },
+            { id: "m8_4", name: "퓨어 젬스톤", ratio: 1 }
+        ]
+    }
+];
+
+let appData = {
+    have: {},
+    comments: {},
+    members: ["파티원A", "파티원B"],
+    posts: []
+};
+
+let isAdmin = false;
+const ADMIN_PW = "1111";
+
+// 히든 클릭 기능 (제목 3번 연타)
+let clickCount = 0;
+let clickTimer = null;
+
+document.getElementById('secretTrigger').addEventListener('click', () => {
+    clickCount++;
+    clearTimeout(clickTimer);
+    if (clickCount >= 3) {
+        clickCount = 0;
+        toggleAdmin();
+    } else {
+        clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+    }
+});
+
+function toggleAdmin() {
+    if (isAdmin) {
+        if (confirm("편집 모드를 종료하시겠습니까?")) {
+            isAdmin = false;
+            document.body.classList.remove('is-admin');
+            render();
+        }
+        return;
+    }
+
+    const input = prompt("편집자 비밀번호를 입력하세요:");
+    if (input === ADMIN_PW) {
+        isAdmin = true;
+        document.body.classList.add('is-admin');
+        alert("편집자 모드 활성화 완료!");
+        render();
+    } else if (input !== null) {
+        alert("비밀번호가 틀렸습니다.");
+    }
+}
+
+function loadData() {
+    const saved = localStorage.getItem('soul_lance_v2_data');
+    if (saved) {
+        try { 
+            appData = JSON.parse(saved);
+            if (!appData.posts) appData.posts = [];
+        } catch(e) {}
+    }
+}
+
+function saveData() {
+    localStorage.setItem('soul_lance_v2_data', JSON.stringify(appData));
+    alert("저장되었습니다! 파티원들에게 이 현황이 변경된 채로 보여집니다.");
+}
+
+function updateQty(id, val) {
+    appData.have[id] = Math.max(0, parseInt(val) || 0);
+    render();
+}
+
+function updateComment(id, val) {
+    appData.comments[id] = val;
+    render();
+}
+
+function addMember() {
+    const input = document.getElementById('new-member-name');
+    const name = input.value.trim();
+    if (name && !appData.members.includes(name)) {
+        appData.members.push(name);
+        input.value = '';
+        render();
+    }
+}
+
+function removeMember(name) {
+    appData.members = appData.members.filter(m => m !== name);
+    render();
+}
+
+/* 게시판 기능 */
+function addPost() {
+    const writer = document.getElementById('post-writer').value.trim();
+    const pw = document.getElementById('post-pw').value.trim();
+    const content = document.getElementById('post-content').value.trim();
+
+    if (!writer || !pw || !content) {
+        alert("작성자 이름, 비밀번호, 내용을 모두 입력해 주세요.");
+        return;
+    }
+
+    const now = new Date();
+    const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    appData.posts.unshift({
+        id: Date.now(),
+        writer,
+        pw,
+        content,
+        time: timeStr
+    });
+
+    document.getElementById('post-content').value = '';
+    saveDataQuietly();
+    renderBoard();
+}
+
+function deletePost(id) {
+    const post = appData.posts.find(p => p.id === id);
+    if (!post) return;
+
+    if (isAdmin) {
+        appData.posts = appData.posts.filter(p => p.id !== id);
+        saveDataQuietly();
+        renderBoard();
+        return;
+    }
+
+    const inputPw = prompt("게시글 삭제 비밀번호를 입력하세요:");
+    if (inputPw === post.pw) {
+        appData.posts = appData.posts.filter(p => p.id !== id);
+        saveDataQuietly();
+        renderBoard();
+        alert("삭제되었습니다.");
+    } else if (inputPw !== null) {
+        alert("비밀번호가 일치하지 않습니다.");
+    }
+}
+
+function editPost(id) {
+    const post = appData.posts.find(p => p.id === id);
+    if (!post) return;
+
+    if (!isAdmin) {
+        const inputPw = prompt("게시글 수정 비밀번호를 입력하세요:");
+        if (inputPw !== post.pw) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+        }
+    }
+
+    const newContent = prompt("수정할 내용을 입력하세요:", post.content);
+    if (newContent !== null && newContent.trim() !== "") {
+        post.content = newContent.trim();
+        saveDataQuietly();
+        renderBoard();
+        alert("수정되었습니다.");
+    }
+}
+
+function saveDataQuietly() {
+    localStorage.setItem('soul_lance_v2_data', JSON.stringify(appData));
+}
+
+function renderBoard() {
+    const container = document.getElementById('board-list');
+    container.innerHTML = '';
+
+    if (!appData.posts || appData.posts.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-sub); text-align:center; padding:12px;">작성된 게시글이 없습니다.</div>';
+        return;
+    }
+
+    appData.posts.forEach(post => {
+        const item = document.createElement('div');
+        item.className = 'board-item';
+        item.innerHTML = `
+            <div class="board-item-header">
+                <div>
+                    <span class="board-writer">${escapeHtml(post.writer)}</span>
+                    <span style="font-size:0.75rem; margin-left:6px;">(${post.time})</span>
+                </div>
+                <div class="board-actions">
+                    <button onclick="editPost(${post.id})">수정</button>
+                    <button onclick="deletePost(${post.id})">삭제</button>
+                </div>
+            </div>
+            <div class="board-content">${escapeHtml(post.content)}</div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+    });
+}
+
+function processNode(node, depth, parentRem = 0, myItems, remItems, progressCalc) {
+    const required = depth === 0 ? node.need : parentRem * node.ratio;
+    const have = appData.have[node.id] || 0;
+    const remaining = Math.max(0, required - have);
+    const comment = appData.comments[node.id] || "";
+
+    if (depth === 0) {
+        progressCalc.total += required;
+        progressCalc.current += Math.min(have, required);
+    }
+
+    if (have > 0) {
+        myItems.push({ id: node.id, name: node.name, have, depth, comment });
+    }
+
+    remItems.push({
+        id: node.id, name: node.name, have, required, remaining, depth, ratio: node.ratio, comment
+    });
+
+    if (node.children) {
+        node.children.forEach(child => processNode(child, depth + 1, remaining, myItems, remItems, progressCalc));
+    }
+}
+
+function render() {
+    // 1. 파티원 목록 렌더링
+    const memberContainer = document.getElementById('member-list');
+    memberContainer.innerHTML = '';
+    appData.members.forEach(m => {
+        const tag = document.createElement('div');
+        tag.className = 'member-tag';
+        tag.innerHTML = `<span>${m}</span><span class="del-member" onclick="removeMember('${m}')">✕</span>`;
+        memberContainer.appendChild(tag);
+    });
+
+    // 2. 재료 트리 처리
+    const myItems = [];
+    const remItems = [];
+    const progressCalc = { total: 0, current: 0 };
+
+    recipeTree.forEach(node => processNode(node, 0, 0, myItems, remItems, progressCalc));
+
+    // 3. 프로그레스바 렌더링
+    const percent = progressCalc.total > 0 ? Math.round((progressCalc.current / progressCalc.total) * 100) : 0;
+    document.getElementById('progress-bar').style.width = percent + '%';
+    document.getElementById('progress-percent').innerText = percent + '%';
+
+    // 4. 재료 현황 (보유 재료) 렌더링
+    const myContainer = document.getElementById('my-items-list');
+    myContainer.innerHTML = myItems.length === 0 ? '<div style="color:var(--text-sub); text-align:center; padding:12px;">현재 보유 중인 재료가 없습니다.</div>' : '';
+
+    myItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `item-card depth-${item.depth}`;
+        card.innerHTML = `
+            <div class="item-main-row">
+                <span class="item-name">${item.name}</span>
+                <span class="item-qty-tag qty-have">현재 보유 ${item.have}개</span>
+            </div>
+            ${item.comment ? `<div class="comment-row">${item.comment}</div>` : ''}
+        `;
+        myContainer.appendChild(card);
+    });
+
+    // 5. 남은 재료 렌더링
+    const remContainer = document.getElementById('rem-items-list');
+    remContainer.innerHTML = '';
+
+    remItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `item-card depth-${item.depth}`;
+
+        let statusTag = item.remaining === 0 
+            ? `<span class="item-qty-tag qty-done">제작 완료</span>`
+            : `<span class="item-qty-tag qty-need">남은 필요 ${item.remaining}개</span>`;
+
+        card.innerHTML = `
+            <div class="item-main-row">
+                <div>
+                    <span class="item-name">${item.name}</span>
+                    ${item.depth > 0 ? `<small style="color:var(--text-sub); margin-left:6px;">(1개당 ${item.ratio}개 필요)</small>` : ''}
+                </div>
+                ${statusTag}
+            </div>
+
+            ${item.comment && !isAdmin ? `<div class="comment-row">${item.comment}</div>` : ''}
+
+            <div class="edit-controls">
+                <input type="number" class="input-num" min="0" value="${item.have}" placeholder="보유량" onchange="updateQty('${item.id}', this.value)">
+                <input type="text" class="input-comment" value="${item.comment}" placeholder="파티원 코멘트 (예: 파티원A 10개 담당)" onchange="updateComment('${item.id}', this.value)">
+            </div>
+        `;
+        remContainer.appendChild(card);
+    });
+
+    // 6. 게시판 렌더링
+    renderBoard();
+}
+
+loadData();
+render();
+</script>
+
+</body>
+</html>
