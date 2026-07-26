@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>소울 리버레이트 랜스 - 파티 제작 현황판</title>
+    <title>소울 리버레이트 제작 파티 현황판</title>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -194,13 +194,29 @@
             padding-bottom: 10px;
             border-bottom: 1px solid var(--card-border);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
         }
 
         .sec-my .section-title { color: var(--accent-green); }
         .sec-rem .section-title { color: var(--gold-main); }
         .sec-board .section-title { color: var(--accent-blue); }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--card-border);
+            color: var(--text-sub);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.15);
+        }
 
         /* Item Grid & Cards */
         .item-grid { display: flex; flex-direction: column; gap: 10px; }
@@ -262,17 +278,18 @@
             flex-wrap: wrap;
         }
 
-        .board-inputs input {
+        .board-inputs select, .board-inputs input {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 6px;
             color: white;
             padding: 8px 12px;
             font-size: 0.9rem;
+            outline: none;
         }
 
-        .board-inputs input[type="text"] { flex: 1; min-width: 120px; }
-        .board-inputs input[type="password"] { width: 120px; }
+        .board-inputs select { flex: 1; min-width: 140px; cursor: pointer; }
+        .board-inputs input[type="password"] { width: 130px; }
 
         .board-textarea {
             width: 100%;
@@ -284,6 +301,7 @@
             padding: 10px;
             font-size: 0.9rem;
             resize: none;
+            outline: none;
         }
 
         .btn-board {
@@ -410,7 +428,7 @@
 <div class="container">
     <header>
         <div class="title-area">
-            <h1 id="secretTrigger">소울 리버레이트 랜스 파티 현황판</h1>
+            <h1 id="secretTrigger">소울 리버레이트 제작 파티 현황판</h1>
         </div>
         <span class="admin-badge" id="adminBadge">편집자 모드</span>
     </header>
@@ -438,26 +456,33 @@
         </div>
     </div>
 
-    <!-- [1] 재료 현황 (내가/파티가 현재 확보한 재료) -->
+    <!-- [1] 재료 현황 (현재 확보한 재료) -->
     <div class="section-card sec-my">
-        <h2 class="section-title">재료 현황 (현재 확보한 보유 재료)</h2>
+        <div class="section-title">
+            <span>재료 현황 (현재 확보한 보유 재료)</span>
+        </div>
         <div id="my-items-list" class="item-grid"></div>
     </div>
 
-    <!-- [2] 남은 재료 (하위 배율 포함 잔여 수량) -->
+    <!-- [2] 남은 재료 (기본적으로 접힌 상태) -->
     <div class="section-card sec-rem">
-        <h2 class="section-title">남은 재료 (앞으로 더 모아야 하는 재료)</h2>
-        <div id="rem-items-list" class="item-grid"></div>
+        <div class="section-title">
+            <span>남은 재료 (앞으로 더 모아야 하는 재료)</span>
+            <button class="toggle-btn" id="rem-toggle-btn" onclick="toggleRemSection()">펴기 ▼</button>
+        </div>
+        <div id="rem-items-list" class="item-grid" style="display: none;"></div>
     </div>
 
-    <!-- [3] 파티원 게시판 섹션 -->
+    <!-- [3] 파티원 공유 게시판 섹션 -->
     <div class="section-card sec-board">
-        <h2 class="section-title">파티원 공유 게시판</h2>
+        <div class="section-title">
+            <span>파티원 공유 게시판</span>
+        </div>
         
         <!-- 게시글 작성 폼 -->
         <div class="board-form">
             <div class="board-inputs">
-                <input type="text" id="post-writer" placeholder="작성자 이름">
+                <select id="post-writer-select"></select>
                 <input type="password" id="post-pw" placeholder="비밀번호(4자리)">
             </div>
             <textarea id="post-content" class="board-textarea" placeholder="파티원들에게 공유할 글을 남겨주세요 (예: 힐웬합금 50개 확보해뒀습니다!)"></textarea>
@@ -546,11 +571,12 @@ const recipeTree = [
 let appData = {
     have: {},
     comments: {},
-    members: ["파티원A", "파티원B"],
+    members: ["노아르파냐", "담야", "반류화"],
     posts: []
 };
 
 let isAdmin = false;
+let isRemCollapsed = true; // 기본 접힘 상태 설정
 const ADMIN_PW = "1111";
 
 // 히든 클릭 기능 (제목 3번 연타)
@@ -589,12 +615,30 @@ function toggleAdmin() {
     }
 }
 
+// 남은 재료 접기/펴기 토글
+function toggleRemSection() {
+    isRemCollapsed = !isRemCollapsed;
+    const listEl = document.getElementById('rem-items-list');
+    const btnEl = document.getElementById('rem-toggle-btn');
+
+    if (isRemCollapsed) {
+        listEl.style.display = 'none';
+        btnEl.innerText = '펴기 ▼';
+    } else {
+        listEl.style.display = 'flex';
+        btnEl.innerText = '접기 ▲';
+    }
+}
+
 function loadData() {
     const saved = localStorage.getItem('soul_lance_v2_data');
     if (saved) {
         try { 
             appData = JSON.parse(saved);
             if (!appData.posts) appData.posts = [];
+            if (!appData.members || appData.members.length === 0) {
+                appData.members = ["노아르파냐", "담야", "반류화"];
+            }
         } catch(e) {}
     }
 }
@@ -631,12 +675,17 @@ function removeMember(name) {
 
 /* 게시판 기능 */
 function addPost() {
-    const writer = document.getElementById('post-writer').value.trim();
+    const writerSelect = document.getElementById('post-writer-select');
+    const writer = writerSelect.value;
     const pw = document.getElementById('post-pw').value.trim();
     const content = document.getElementById('post-content').value.trim();
 
-    if (!writer || !pw || !content) {
-        alert("작성자 이름, 비밀번호, 내용을 모두 입력해 주세요.");
+    if (!writer) {
+        alert("작성자를 선택해 주세요. (상단 파티원 목록에 이름을 먼저 추가해 주세요)");
+        return;
+    }
+    if (!pw || !content) {
+        alert("비밀번호와 내용을 모두 입력해 주세요.");
         return;
     }
 
@@ -652,6 +701,7 @@ function addPost() {
     });
 
     document.getElementById('post-content').value = '';
+    document.getElementById('post-pw').value = '';
     saveDataQuietly();
     renderBoard();
 }
@@ -704,6 +754,20 @@ function saveDataQuietly() {
 }
 
 function renderBoard() {
+    const writerSelect = document.getElementById('post-writer-select');
+    writerSelect.innerHTML = '';
+    
+    if (appData.members.length === 0) {
+        writerSelect.innerHTML = '<option value="">(파티원 목록 없음)</option>';
+    } else {
+        appData.members.forEach(m => {
+            const opt = document.createElement('option');
+            opt.value = m;
+            opt.innerText = m;
+            writerSelect.appendChild(opt);
+        });
+    }
+
     const container = document.getElementById('board-list');
     container.innerHTML = '';
 
@@ -763,7 +827,6 @@ function processNode(node, depth, parentRem = 0, myItems, remItems, progressCalc
 }
 
 function render() {
-    // 1. 파티원 목록 렌더링
     const memberContainer = document.getElementById('member-list');
     memberContainer.innerHTML = '';
     appData.members.forEach(m => {
@@ -773,19 +836,16 @@ function render() {
         memberContainer.appendChild(tag);
     });
 
-    // 2. 재료 트리 처리
     const myItems = [];
     const remItems = [];
     const progressCalc = { total: 0, current: 0 };
 
     recipeTree.forEach(node => processNode(node, 0, 0, myItems, remItems, progressCalc));
 
-    // 3. 프로그레스바 렌더링
     const percent = progressCalc.total > 0 ? Math.round((progressCalc.current / progressCalc.total) * 100) : 0;
     document.getElementById('progress-bar').style.width = percent + '%';
     document.getElementById('progress-percent').innerText = percent + '%';
 
-    // 4. 재료 현황 (보유 재료) 렌더링
     const myContainer = document.getElementById('my-items-list');
     myContainer.innerHTML = myItems.length === 0 ? '<div style="color:var(--text-sub); text-align:center; padding:12px;">현재 보유 중인 재료가 없습니다.</div>' : '';
 
@@ -802,7 +862,6 @@ function render() {
         myContainer.appendChild(card);
     });
 
-    // 5. 남은 재료 렌더링
     const remContainer = document.getElementById('rem-items-list');
     remContainer.innerHTML = '';
 
@@ -833,7 +892,6 @@ function render() {
         remContainer.appendChild(card);
     });
 
-    // 6. 게시판 렌더링
     renderBoard();
 }
 
