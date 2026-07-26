@@ -15,6 +15,7 @@
             --gold-hover: #d97706;
             --accent-blue: #38bdf8;
             --accent-green: #22c55e;
+            --accent-purple: #c084fc;
             --danger-red: #ef4444;
         }
 
@@ -55,9 +56,6 @@
             color: var(--gold-main);
             cursor: pointer;
             user-select: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .admin-badge {
@@ -198,6 +196,7 @@
             align-items: center;
         }
 
+        .sec-summary .section-title { color: var(--accent-purple); }
         .sec-my .section-title { color: var(--accent-green); }
         .sec-rem .section-title { color: var(--gold-main); }
         .sec-board .section-title { color: var(--accent-blue); }
@@ -216,6 +215,41 @@
         .toggle-btn:hover {
             color: var(--text-main);
             background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Summary Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .summary-card {
+            background: #0b0f19;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .summary-name {
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .summary-rem {
+            font-weight: bold;
+            color: var(--gold-main);
         }
 
         /* Item Grid & Cards */
@@ -456,10 +490,20 @@
         </div>
     </div>
 
-    <!-- [1] 재료 현황 (현재 확보한 재료) -->
+    <!-- [0] 중복 재료 전체 총합 요약 (신규) -->
+    <div class="section-card sec-summary">
+        <div class="section-title">
+            <span>파티 재료 전체 총합 모아보기</span>
+            <button class="toggle-btn" id="sum-toggle-btn" onclick="toggleSection('summary-grid', 'sum-toggle-btn')">접기 ▲</button>
+        </div>
+        <div id="summary-grid" class="summary-grid"></div>
+    </div>
+
+    <!-- [1] 재료 현황 (보유 재료) -->
     <div class="section-card sec-my">
         <div class="section-title">
             <span>재료 현황 (현재 확보한 보유 재료)</span>
+            <button class="toggle-btn" id="my-toggle-btn" onclick="toggleSection('my-items-list', 'my-toggle-btn')">접기 ▲</button>
         </div>
         <div id="my-items-list" class="item-grid"></div>
     </div>
@@ -468,7 +512,7 @@
     <div class="section-card sec-rem">
         <div class="section-title">
             <span>남은 재료 (앞으로 더 모아야 하는 재료)</span>
-            <button class="toggle-btn" id="rem-toggle-btn" onclick="toggleRemSection()">펴기 ▼</button>
+            <button class="toggle-btn" id="rem-toggle-btn" onclick="toggleSection('rem-items-list', 'rem-toggle-btn')">펴기 ▼</button>
         </div>
         <div id="rem-items-list" class="item-grid" style="display: none;"></div>
     </div>
@@ -479,7 +523,6 @@
             <span>파티원 공유 게시판</span>
         </div>
         
-        <!-- 게시글 작성 폼 -->
         <div class="board-form">
             <div class="board-inputs">
                 <select id="post-writer-select"></select>
@@ -489,7 +532,6 @@
             <button class="btn-board" onclick="addPost()">등록</button>
         </div>
 
-        <!-- 게시글 목록 -->
         <div id="board-list" class="board-list"></div>
     </div>
 </div>
@@ -576,7 +618,6 @@ let appData = {
 };
 
 let isAdmin = false;
-let isRemCollapsed = true; // 기본 접힘 상태 설정
 const ADMIN_PW = "1111";
 
 // 히든 클릭 기능 (제목 3번 연타)
@@ -615,18 +656,17 @@ function toggleAdmin() {
     }
 }
 
-// 남은 재료 접기/펴기 토글
-function toggleRemSection() {
-    isRemCollapsed = !isRemCollapsed;
-    const listEl = document.getElementById('rem-items-list');
-    const btnEl = document.getElementById('rem-toggle-btn');
+// 공통 범용 섹션 접기/펴기 토글
+function toggleSection(elementId, btnId) {
+    const el = document.getElementById(elementId);
+    const btn = document.getElementById(btnId);
 
-    if (isRemCollapsed) {
-        listEl.style.display = 'none';
-        btnEl.innerText = '펴기 ▼';
+    if (el.style.display === 'none') {
+        el.style.display = elementId.includes('grid') ? 'grid' : 'flex';
+        btn.innerText = '접기 ▲';
     } else {
-        listEl.style.display = 'flex';
-        btnEl.innerText = '접기 ▲';
+        el.style.display = 'none';
+        btn.innerText = '펴기 ▼';
     }
 }
 
@@ -681,7 +721,7 @@ function addPost() {
     const content = document.getElementById('post-content').value.trim();
 
     if (!writer) {
-        alert("작성자를 선택해 주세요. (상단 파티원 목록에 이름을 먼저 추가해 주세요)");
+        alert("작성자를 선택해 주세요.");
         return;
     }
     if (!pw || !content) {
@@ -802,7 +842,8 @@ function escapeHtml(str) {
     });
 }
 
-function processNode(node, depth, parentRem = 0, myItems, remItems, progressCalc) {
+// 재료 연산 및 수량 자동 합산
+function processNode(node, depth, parentRem = 0, myItems, remItems, progressCalc, summaryMap) {
     const required = depth === 0 ? node.need : parentRem * node.ratio;
     const have = appData.have[node.id] || 0;
     const remaining = Math.max(0, required - have);
@@ -813,6 +854,14 @@ function processNode(node, depth, parentRem = 0, myItems, remItems, progressCalc
         progressCalc.current += Math.min(have, required);
     }
 
+    // 중복 재료 파티 전체 총합 누적
+    if (!summaryMap[node.name]) {
+        summaryMap[node.name] = { req: 0, have: 0, rem: 0 };
+    }
+    summaryMap[node.name].req += required;
+    summaryMap[node.name].have += have;
+    summaryMap[node.name].rem += remaining;
+
     if (have > 0) {
         myItems.push({ id: node.id, name: node.name, have, depth, comment });
     }
@@ -822,7 +871,7 @@ function processNode(node, depth, parentRem = 0, myItems, remItems, progressCalc
     });
 
     if (node.children) {
-        node.children.forEach(child => processNode(child, depth + 1, remaining, myItems, remItems, progressCalc));
+        node.children.forEach(child => processNode(child, depth + 1, remaining, myItems, remItems, progressCalc, summaryMap));
     }
 }
 
@@ -839,13 +888,36 @@ function render() {
     const myItems = [];
     const remItems = [];
     const progressCalc = { total: 0, current: 0 };
+    const summaryMap = {};
 
-    recipeTree.forEach(node => processNode(node, 0, 0, myItems, remItems, progressCalc));
+    recipeTree.forEach(node => processNode(node, 0, 0, myItems, remItems, progressCalc, summaryMap));
 
+    // 0. 중복 재료 총합 요약 카드 렌더링
+    const summaryContainer = document.getElementById('summary-grid');
+    summaryContainer.innerHTML = '';
+    Object.keys(summaryMap).forEach(name => {
+        const stat = summaryMap[name];
+        if (stat.req > 0) {
+            const card = document.createElement('div');
+            card.className = 'summary-card';
+            card.innerHTML = `
+                <div class="summary-name">${name}</div>
+                <div class="summary-stats">
+                    <span>총 필요: ${stat.req}개</span>
+                    <span>보유: ${stat.have}개</span>
+                </div>
+                <div class="summary-rem">➔ 최종 남은필요: ${stat.rem}개</div>
+            `;
+            summaryContainer.appendChild(card);
+        }
+    });
+
+    // 프로그레스바 렌더링
     const percent = progressCalc.total > 0 ? Math.round((progressCalc.current / progressCalc.total) * 100) : 0;
     document.getElementById('progress-bar').style.width = percent + '%';
     document.getElementById('progress-percent').innerText = percent + '%';
 
+    // 재료 현황 렌더링
     const myContainer = document.getElementById('my-items-list');
     myContainer.innerHTML = myItems.length === 0 ? '<div style="color:var(--text-sub); text-align:center; padding:12px;">현재 보유 중인 재료가 없습니다.</div>' : '';
 
@@ -862,6 +934,7 @@ function render() {
         myContainer.appendChild(card);
     });
 
+    // 남은 재료 렌더링
     const remContainer = document.getElementById('rem-items-list');
     remContainer.innerHTML = '';
 
